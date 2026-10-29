@@ -1,0 +1,29 @@
+name: Renmei Continuous Integration
+
+on:
+  push:
+    branches: [ develop, main ]
+  pull_request:
+    branches: [ develop, main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v4
+      with:
+        global-json-file: global.json
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build solution (Release)
+      run: dotnet build --no-restore --configuration Release
+
+    - name: Run unit & integration tests
+      run: dotnet test --no-build --configuration Release --verbosity normal
