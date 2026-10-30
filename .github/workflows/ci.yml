@@ -1,4 +1,4 @@
-name: Renmei Continuous Integration
+name: CI Pipeline
 
 on:
   push:
@@ -6,24 +6,31 @@ on:
   pull_request:
     branches: [ develop, main ]
 
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      - name: 1. Checkout source code
+        uses: actions/checkout@v4
 
-    - name: Setup .NET SDK
-      uses: actions/setup-dotnet@v4
-      with:
-        global-json-file: global.json
+      - name: 2. Setup .NET 10 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
 
-    - name: Restore dependencies
-      run: dotnet restore
+      - name: 3. Restore dependencies
+        run: dotnet restore
 
-    - name: Build solution (Release)
-      run: dotnet build --no-restore --configuration Release
+      - name: 4. Build solution (Release mode)
+        run: dotnet build --no-restore -c Release
 
-    - name: Run unit & integration tests
-      run: dotnet test --no-build --configuration Release --verbosity normal
+      - name: 5. Run Unit Tests
+        run: dotnet test --no-build -c Release --logger "trx;LogFileName=test-results.trx"

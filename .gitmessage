@@ -1,20 +1,46 @@
-# <type>(<scope>): <mô tả ngắn bằng tiếng Anh, tối đa 72 ký tự>
-# 
-# [Chi tiết mô tả nguyên nhân và giải pháp nếu cần]
-#
+# <type>(<scope>): <mô tả ngắn bằng tiếng Anh dạng mệnh lệnh>
+
+# [Mô tả chi tiết nếu chưa đủ rõ]
+# - Vì sao cần thay đổi này?
+# - Giải pháp đã thực hiện là gì?
+
 # Refs: FR-xxx / CR-xxx / Notion-Card-ID
-# ----------------------------------------------------------------------
-# Allowed Types:
-#   feat     : A new feature
-#   fix      : A bug fix
-#   docs     : Documentation only changes
-#   style    : Changes that do not affect the meaning of the code
-#   refactor : A code change that neither fixes a bug nor adds a feature
-#   perf     : A code change that improves performance
-#   test     : Adding missing tests or correcting existing tests
-#   build    : Changes that affect the build system or external dependencies
-#   ci       : Changes to our CI configuration files and scripts
-#   chore    : Other changes that don't modify src or test files
-#   revert   : Reverts a previous commit
-# ----------------------------------------------------------------------
-# Suggested Scopes: auth, kanji, review, placement, admin, db, mobile, infra, srs, sdd
+# BREAKING CHANGE: <mô tả nếu thay đổi làm hỏng tương thích ngược>
+
+# Danh sách Type chuẩn:
+#   feat     : Tính năng mới
+#   fix      : Bug fix
+#   docs     : Cập nhật tài liệu SRS, SDD, README, ADR
+#   test     : Thêm/Sửa Unit Test, Integration Test
+#   refactor : Sửa/Cải tiến cấu trúc code
+#   perf     : Performance
+#   ci       : Thay đổi cấu hình CI/CD
+#   build    : Thay đổi hệ thống build, dependencies, NuGet, Docker
+#   chore    : Việc lặt vặt, cấu hình IDE, dọn dẹp, khởi tạo repo
+#   style    : Định dạng code, khoảng trắng, dấu chấm phẩy
+#   revert   : Hoàn tác commit trước đó
+#
+# Danh sách Scope cho Renmei:
+# 1. Phân hệ chức năng dùng cho feat, fix, test:
+#   auth      : Xác thực và phân quyền JWT, Identity, Login, Register, Refresh Token
+#   kanji     : Quản lý và tra cứu Kanji, Từ vựng, Bộ thủ, Ví dụ
+#   srs       : Thuật toán lặp lại ngắt quãng SM-2, Tính toán lịch ôn tập
+#   review    : Phiên ôn tập, bài tập luyện tập, chấm điểm, đánh giá kết quả
+#   placement : Bài kiểm tra trình độ đầu vào
+#   admin     : Chức năng quản trị viên, quản lý người dùng, nội dung Kanji, System Logs
+#   user      : Hồ sơ người dùng, thiết lập tài khoản, cài đặt cá nhân
+#
+# 2. Kiến trúc hạ tầng dùng cho feat, refactor, perf, db:
+#   domain    : Domain Models, Entities, Value Objects, Domain Events, Interfaces
+#   app       : Application Layer, Use Cases, CQRS Commands/Queries, DTOs, Mappers
+#   infra     : Infrastructure Layer, Repositories Implementation, External Services
+#   api       : WebApi Layer, Controllers, Middlewares, Filters, Dependency Injection
+#   db        : Database, EF Core Migrations, Seeding Data, Configurations, Indexing
+#
+# 3. Tài liệu và quản lí dự án dùng cho docs, chore, ci, build:
+#   srs       : Tài liệu Yêu cầu phần mềm, Software Requirements Specification
+#   sdd       : Tài liệu Thiết kế phần mềm, Software Design Document / ERD / OpenAPI
+#   adr       : Quyết định kiến trúc (Architectural Decision Records)
+#   ci        : Cấu hình GitHub Actions, Pipeline CI/CD, Workflows
+#   deps      : Quản lý gói phụ thuộc, NuGet Packages, Versions, Directory.Packages.props
+#   sys       : Cấu hình hệ thống chung, Solution, EditorConfig, Git Templates, README
