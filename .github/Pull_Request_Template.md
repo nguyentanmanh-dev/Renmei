@@ -1,74 +1,28 @@
-\## Tóm tắt
+## Type of Change
+- [ ] `feat`: Tính năng mới
+- [ ] `fix`: Bug fix
+- [ ] `docs`: Cập nhật tài liệu
+- [ ] `refactor`: Cải tiến cấu trúc code
+- [ ] `perf`: Tối ưu hiệu năng
+- [ ] `test`: Thêm/sửa bài kiểm thử
+- [ ] `build` / `ci` / `chore`: Cấu hình hệ thống, dependencies, CI/CD
 
-<!-- Làm gì và vì sao, từ 1-3 câu -->
+## Danh sách việc đã làm (What was done
+- **Mã yêu cầu:**  | **Thẻ Notion:** 
+- [x] 
+- [x] 
 
+## Cách kiểm chứng
+- [ ] **CI Pipeline:** `build-and-test` đã báo tích xanh ✅
+- [ ] **Unit Tests:** Đã chạy `dotnet test` thành công (Tổng số test pass: ...)
+- [ ] **Manual Testing:** Đã kiểm thử qua Swagger/Postman (Dán ảnh/log nếu có)
 
+## Checklist chất lượng 
+- [ ] Tiêu đề PR tuân thủ đúng chuẩn Conventional Commits.
+- [ ] Mã nguồn đã biên dịch bản Release không còn Warning (`TreatWarningsAsErrors`).
+- [ ] Đã kiểm tra kỹ phần Diff: KHÔNG commit lọt secret, password, connection string hay file rác.
+- [ ] Đã cập nhật Ma trận truy vết (RTM) hoặc tài liệu SDD liên quan (nếu có).
 
-\## Thuộc về
-
-\- \*\*Bản phát hành:\*\* R1 / R2 / R3
-
-\- \*\*Pha Waterfall:\*\* 1 / 2 / 3 / 4 / 5 / 6
-
-\- \*\*Thẻ Notion:\*\* https://app.notion.com/p/Kanji-Learning-App-3fe00248d39f80f9941dd0a1d8145cc3?source=copy\_link
-
-\- \*\*Mã liên quan:\*\* FR-xxx, NFR-xxx, CR-xxx, ADR-xxx
-
-
-
-\## Loại thay đổi
-
-\- \[ ] `feat` (Tính năng mới)
-
-\- \[ ] `fix` (Sửa lỗi)
-
-\- \[ ] `docs` (Cập nhật tài liệu)
-
-\- \[ ] `test` (Thêm/Sửa unit test)
-
-\- \[ ] `refactor` (Cải tiến cấu trúc mã)
-
-\- \[ ] `ci/build` (Cấu hình CI/CD hoặc Build)
-
-\- \[ ] `chore` (Cấu hình nhỏ / Dọn dẹp)
-
-
-
-\## Đã làm gì
-
-\-
-
-
-
-\## Cách kiểm chứng
-
-<!-- Test nào đã chạy, lệnh gì, kết quả -->
-
-\- \[ ] `dotnet build -c Release` thành công
-
-\- \[ ] `dotnet test` vượt qua toàn bộ test cases
-
-\- \*\*Bằng chứng:\*\* (Link test run / Ảnh chụp screen / Video demo)
-
-
-
-\## Checklist hoàn thành (Definition of Done)
-
-\- \[ ] Tiêu đề PR tuân thủ đúng chuẩn \*\*Conventional Commits\*\*
-
-\- \[ ] Đã viết unit/integration test cho logic quan trọng
-
-\- \[ ] Kiểm tra kỹ: Không có secret, ConnectionString hay thông tin nhạy cảm
-
-\- \[ ] Đã cập nhật RTM / SRS / SDD / README nếu thay đổi có ảnh hưởng
-
-\- \[ ] Đã kiểm tra EF Core Migration (nếu có thay đổi DB Schema)
-
-\- \[ ] Có Change Request (CR) đính kèm nếu thay đổi ngoài phạm vi SRS ban đầu
-
-
-
-\## Rủi ro và cách quay lui (Rollback Plan)
-
-<!-- Ảnh hưởng gì nếu phát sinh lỗi trên môi trường tích hợp và cách khắc phục nhanh -->
-
+## Rủi ro và plan quay lui
+- **Rủi ro:** 
+- **Cách quay lui:** Revert Pull Request này trực tiếp trên GitHub.
