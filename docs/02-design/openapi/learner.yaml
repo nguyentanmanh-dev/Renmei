@@ -1,0 +1,403 @@
+openapi: 3.0.3
+info:
+  title: Renmei Core Learning API Specification
+  description: Tài liệu thiết kế RESTful API chuẩn OpenAPI 3.0 cho phân hệ học viên
+  version: 1.0.0
+servers:
+  - url: https://api.renmei.app/v1
+    description: Production Server
+  - url: http://localhost:5000/v1
+    description: Local Development Server
+
+paths:
+#FR-001: Đăng nhập JWT
+  /auth/register:
+    post:
+      summary: Đăng ký tài khoản người học mới
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '201':
+          description: Đăng ký thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '400':
+          description: Dữ liệu đầu vào không hợp lệ hoặc Email đã tồn tại
+
+  /auth/login:
+    post:
+      summary: Đăng nhập vào hệ thống
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Đăng nhập thành công, cấp Access Token và Refresh Token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          description: Sai email hoặc mật khẩu
+
+#FR-002: Kiểm tra trình độ đầu vào
+  /placement-test/questions:
+    get:
+      summary: Lấy bộ câu hỏi kiểm tra trình độ đầu vào
+      tags:
+        - Placement Test
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Danh sách các câu hỏi Placement Test
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PlacementQuestionDto'
+
+#FR-003: Ôn tập Kanji theo thuật toán SM-2
+#FR-004: Hàng đợi học hằng ngày và Thống kê
+#FR-005: Học từ vựng có hình ảnh minh họa và giọng đọc chuẩn
+  /learning/daily-queue:
+    get:
+      summary: Lấy hàng đợi flashcard Kanji cần học/ôn trong ngày
+      tags:
+        - Learning & SM-2
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Thông tin hàng đợi và danh sách thẻ Kanji
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DailyQueueResponse'
+
+  /learning/review:
+    post:
+      summary: Gửi đánh giá kết quả ôn tập (Tính toán theo thuật toán SM-2)
+      tags:
+        - Learning & SM-2
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReviewSubmitRequest'
+      responses:
+        '200':
+          description: Cập nhật chỉ số SM-2 và lịch ôn tập thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewSubmitResponse'
+
+
+#FR-006: Duy trì chuỗi ngày học
+  /users/me/streak:
+    get:
+      summary: Lấy thông tin chuỗi ngày học hiện tại và kỷ lục
+      tags:
+        - Learner Profile
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Dữ liệu streak của người dùng
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserStreakResponse'
+
+
+#FR-007: Hội thoại tình huống ngắn và giao tiếp tự do
+/chat/scenarios:
+    get:
+      summary: Lấy danh sách các tình huống hội thoại đóng vai
+      tags:
+        - Roleplay Chat
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Danh sách tình huống roleplay sẵn có
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ChatScenarioDto'
+
+  /chat/message:
+    post:
+      summary: Gửi tin nhắn hội thoại tự do hoặc theo tình huống (AI Roleplay)
+      tags:
+        - Roleplay Chat
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatMessageRequest'
+      responses:
+        '200':
+          description: Phản hồi từ AI và gợi ý Kanji liên quan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatMessageResponse'
+
+#khuôn mẫu và cổng bảo vệ
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    # khuôn mẫu đăng ký FR-001
+    RegisterRequest:
+      type: object
+      required:
+        - email
+        - password
+        - fullName
+      properties:
+        email:
+          type: string
+          format: email
+          example: learner@renmei.app
+        password:
+          type: string
+          format: password
+          minLength: 8
+          example: "Password123!"
+        fullName:
+          type: string
+          example: "Nguyễn Tấn Mạnh"
+
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          example: learner@renmei.app
+        password:
+          type: string
+          format: password
+          example: "Password123!"
+
+    AuthResponse:
+      type: object
+      properties:
+        accessToken:
+          type: string
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        refreshToken:
+          type: string
+          example: "c0a80101-0000-0000-0000-000000000001"
+        expiresIn:
+          type: integer
+          example: 3600
+
+    # khuôn mẫu test đầu vào FR-002
+    PlacementQuestionDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        content:
+          type: string
+          example: "Chọn âm Hán Việt đúng của chữ 日:"
+        jlptLevel:
+          type: string
+          example: "N5"
+        options:
+          type: array
+          items:
+            $ref: '#/components/schemas/PlacementOptionDto'
+
+    PlacementOptionDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        optionText:
+          type: string
+          example: "NHẬT"
+
+    # khuôn mẫu hàng đợi, thuật toán, hình ảnh FR-003, FR-004, FR-005
+    DailyQueueResponse:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+          example: "2026-11-03"
+        newCardsCount:
+          type: integer
+          example: 5
+        reviewCardsCount:
+          type: integer
+          example: 15
+        kanjiList:
+          type: array
+          items:
+            $ref: '#/components/schemas/KanjiCardDto'
+
+    KanjiCardDto:
+      type: object
+      properties:
+        kanjiId:
+          type: string
+          format: uuid
+        character:
+          type: string
+          example: "日"
+        hanViet:
+          type: string
+          example: "NHẬT"
+        jlptLevel:
+          type: string
+          example: "N5"
+        strokeCount:
+          type: integer
+          example: 4
+        meanings:
+          type: array
+          items:
+            type: string
+          example: ["Mặt trời", "Ngày"]
+        mnemonicStory:
+          type: string
+          example: "Hình ảnh mặt trời hình tròn có gạch ở giữa."
+        mnemonicImageUrl:
+          type: string
+          example: "https://cdn.renmei.app/images/kanji/nichi.png"
+        audioUrl:
+          type: string
+          example: "https://cdn.renmei.app/audio/kanji/nichi.mp3"
+
+    ReviewSubmitRequest:
+      type: object
+      required:
+        - kanjiId
+        - score
+      properties:
+        kanjiId:
+          type: string
+          format: uuid
+        score:
+          type: integer
+          description: Điểm SM-2 từ 0 đến 5
+          minimum: 0
+          maximum: 5
+          example: 4
+
+    ReviewSubmitResponse:
+      type: object
+      properties:
+        kanjiId:
+          type: string
+          format: uuid
+        newEaseFactor:
+          type: number
+          format: float
+          example: 2.36
+        nextIntervalDays:
+          type: integer
+          example: 6
+        dueDate:
+          type: string
+          format: date
+          example: "2026-11-09"
+
+    # khuôn mẫu giữu chuỗi FR-006
+    UserStreakResponse:
+      type: object
+      properties:
+        currentStreak:
+          type: integer
+          example: 7
+        longestStreak:
+          type: integer
+          example: 14
+        freezeItemCount:
+          type: integer
+          example: 1
+        lastLearnedDate:
+          type: string
+          format: date
+          example: "2026-11-03"
+
+    # khuôn mẫu hội thoại FR-007
+    ChatScenarioDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+          example: "Đặt đồ ăn tại quán Izakaya"
+        roleplayContext:
+          type: string
+          example: "Bạn là khách hàng, AI đóng vai bồi bàn Nhật Bản."
+        suggestedKanjiIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+
+    ChatMessageRequest:
+      type: object
+      required:
+        - message
+      properties:
+        scenarioId:
+          type: string
+          format: uuid
+          nullable: true
+          description: Để trống nếu là Chat Freestyle (Giao tiếp tự do)
+        message:
+          type: string
+          example: "すみません、メニューをお願いします。"
+
+    ChatMessageResponse:
+      type: object
+      properties:
+        replyMessage:
+          type: string
+          example: "はい、どうぞ！こちらがメニューになります。"
+        detectedKanjiList:
+          type: array
+          items:
+            $ref: '#/components/schemas/KanjiCardDto'
+          description: Danh sách chữ Kanji xuất hiện trong câu trả lời để hỗ trợ học tập

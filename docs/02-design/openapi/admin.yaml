@@ -1,0 +1,606 @@
+openapi: 3.0.3
+info:
+  title: Renmei Admin System API Specification
+  description: Tài liệu thiết kế RESTful API chuẩn OpenAPI 3.0 cho Phân hệ Quản trị viên (Admin Portal).
+  version: 1.0.0
+servers:
+  - url: https://api.renmei.app/v1/admin
+    description: Production Admin Server
+  - url: http://localhost:5000/v1/admin
+    description: Local Development Admin Server
+
+paths:
+# FR-010: Quản lý Nội dung Kanji và lịch sử phiên bản
+  /kanji:
+    get:
+      summary: Lấy danh sách Kanji
+      tags:
+        - Admin Kanji Management
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: pageSize
+          in: query
+          schema:
+            type: integer
+            default: 20
+        - name: jlptLevel
+          in: query
+          schema:
+            type: string
+            example: "N5"
+        - name: status
+          in: query
+          schema:
+            type: string
+            example: "Published"
+      responses:
+        '200':
+          description: Danh sách Kanji và thông tin phân trang
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedKanjiResponse'
+
+    post:
+      summary: Tạo mới một thẻ Kanji
+      tags:
+        - Admin Kanji Management
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateKanjiRequest'
+      responses:
+        '201':
+          description: Tạo Kanji thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminKanjiDetailDto'
+
+  /kanji/{id}:
+    get:
+      summary: Xem chi tiết một Kanji kèm lịch sử các phiên bản
+      tags:
+        - Admin Kanji Management
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Chi tiết Kanji
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminKanjiDetailDto'
+
+    put:
+      summary: Cập nhật Kanji
+      tags:
+        - Admin Kanji Management
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateKanjiRequest'
+      responses:
+        '200':
+          description: Cập nhật thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminKanjiDetailDto'
+
+    delete:
+      summary: Xóa thẻ Kanji
+      tags:
+        - Admin Kanji Management
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Xóa thành công
+
+# FR-011: Quản lý tài khoản user và an toàn hệ thống
+  /users:
+    get:
+      summary: Lấy danh sách người dùng hệ thống
+      tags:
+        - Admin User Management
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: pageSize
+          in: query
+          schema:
+            type: integer
+            default: 20
+      responses:
+        '200':
+          description: Danh sách tài khoản
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedUserResponse'
+
+  /users/{id}/roles:
+    put:
+      summary: Cập nhật vai trò/quản trị cho tài khoản
+      tags:
+        - Admin User Management
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - roleIds
+              properties:
+                roleIds:
+                  type: array
+                  items:
+                    type: integer
+                  example: [1, 2]
+      responses:
+        '200':
+          description: Phân quyền thành công
+
+  /users/{id}/status:
+    patch:
+      summary: Khóa hoặc kích hoạt lại tài khoản người dùng
+      tags:
+        - Admin User Management
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - status
+              properties:
+                status:
+                  type: string
+                  enum: [Active, Suspended, Banned]
+                  example: "Suspended"
+      responses:
+        '200':
+          description: Cập nhật trạng thái thành công
+
+# FR-012: Tiếp nhận và xử lý báo lỗi từu user
+  /feedbacks:
+    get:
+      summary: Lấy danh sách phản hồi/báo lỗi từ người học
+      tags:
+        - Admin Feedback Management
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            example: "Open"
+      responses:
+        '200':
+          description: Danh sách Feedback
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FeedbackDto'
+
+  /feedbacks/{id}/resolve:
+    post:
+      summary: Xử lý và duyệt phản hồi
+      tags:
+        - Admin Feedback Management
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - adminNote
+                - status
+              properties:
+                adminNote:
+                  type: string
+                  example: "Đã sửa lại âm Hán Việt chuẩn."
+                status:
+                  type: string
+                  enum: [Resolved, Rejected]
+                  example: "Resolved"
+      responses:
+        '200':
+          description: Cập nhật trạng thái xử lý feedback thành công
+
+
+# FR-013: Truy vết thao tác quản trị
+  /audit-logs:
+    get:
+      summary: Truy vấn nhật ký tác vụ Admin
+      tags:
+        - Admin Audit Logs
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: actorUserId
+          in: query
+          schema:
+            type: string
+            format: uuid
+        - name: entityType
+          in: query
+          schema:
+            type: string
+            example: "Kanji"
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+      responses:
+        '200':
+          description: Danh sách nhật ký thao tác
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedAuditLogResponse'
+
+
+# FR-014: Quản lý bài kiểm tra đầu vào
+# FR-015: Báo cáo chỉ số và Analytics Sản phẩm 
+  /dashboard/metrics:
+    get:
+      summary: Lấy dữ liệu thống kê DAU, WAU, MAU và tỷ lệ Retention
+      tags:
+        - Admin Analytics Dashboard
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: fromDate
+          in: query
+          schema:
+            type: string
+            format: date
+            example: "2026-10-01"
+        - name: toDate
+          in: query
+          schema:
+            type: string
+            format: date
+            example: "2026-11-01"
+      responses:
+        '200':
+          description: Chỉ số thống kê tổng quan hệ thống
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DashboardMetricsResponse'
+
+# Khuôn mẫu và cổng bảo vệ
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    # khuôn mẫu Kanji FR-010
+    CreateKanjiRequest:
+      type: object
+      required:
+        - character
+        - hanViet
+        - jlptLevel
+      properties:
+        character:
+          type: string
+          example: "月"
+        hanViet:
+          type: string
+          example: "NGUYỆT"
+        jlptLevel:
+          type: string
+          example: "N5"
+        strokeCount:
+          type: integer
+          example: 4
+        meanings:
+          type: array
+          items:
+            type: string
+          example: ["Mặt trăng", "Tháng"]
+        onyomi:
+          type: array
+          items:
+            type: string
+          example: ["ゲツ", "ガツ"]
+        kunyomi:
+          type: array
+          items:
+            type: string
+          example: ["つき"]
+        mnemonicStory:
+          type: string
+          example: "Hình lưỡi liềm mặt trăng trên bầu trời."
+        mnemonicImageUrl:
+          type: string
+          example: "https://cdn.renmei.app/images/kanji/tsuki.png"
+        audioUrl:
+          type: string
+          example: "https://cdn.renmei.app/audio/kanji/tsuki.mp3"
+
+    UpdateKanjiRequest:
+      type: object
+      properties:
+        hanViet:
+          type: string
+          example: "NGUYỆT"
+        meanings:
+          type: array
+          items:
+            type: string
+          example: ["Mặt trăng", "Tháng"]
+        mnemonicStory:
+          type: string
+          example: "Cập nhật câu chuyện mẹo nhớ chi tiết hơn."
+
+    AdminKanjiDetailDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        character:
+          type: string
+          example: "月"
+        hanViet:
+          type: string
+          example: "NGUYỆT"
+        jlptLevel:
+          type: string
+          example: "N5"
+        version:
+          type: integer
+          example: 2
+        status:
+          type: string
+          example: "Published"
+        createdBy:
+          type: string
+          format: uuid
+        createdAt:
+          type: string
+          format: date-time
+
+    PagedKanjiResponse:
+      type: object
+      properties:
+        totalCount:
+          type: integer
+          example: 100
+        page:
+          type: integer
+          example: 1
+        pageSize:
+          type: integer
+          example: 20
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/AdminKanjiDetailDto'
+
+    # khuôn mẫu quản lí người dùng FR-011
+    UserDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+          example: "user@example.com"
+        fullName:
+          type: string
+          example: "Nguyễn Văn B"
+        status:
+          type: string
+          example: "Active"
+        roles:
+          type: array
+          items:
+            type: string
+          example: ["Learner", "ContentEditor"]
+        createdAt:
+          type: string
+          format: date-time
+
+    PagedUserResponse:
+      type: object
+      properties:
+        totalCount:
+          type: integer
+          example: 50
+        page:
+          type: integer
+          example: 1
+        pageSize:
+          type: integer
+          example: 20
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserDto'
+
+    # khuôn mẫu phản hồi FR-012
+    FeedbackDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        userId:
+          type: string
+          format: uuid
+        kanjiId:
+          type: string
+          format: uuid
+        type:
+          type: string
+          example: "ContentError"
+        description:
+          type: string
+          example: "Chữ này bị sai âm Kunyomi."
+        status:
+          type: string
+          example: "Open"
+        adminNote:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+
+    # khuôn mẫu nhật ký kiểm toán FR-013
+    AuditLogDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        actorUserId:
+          type: string
+          format: uuid
+        action:
+          type: string
+          example: "UPDATE_KANJI"
+        entityType:
+          type: string
+          example: "Kanji"
+        entityId:
+          type: string
+          example: "c0a80101-0000-0000-0000-000000000001"
+        ipAddress:
+          type: string
+          example: "127.0.0.1"
+        createdAt:
+          type: string
+          format: date-time
+
+    PagedAuditLogResponse:
+      type: object
+      properties:
+        totalCount:
+          type: integer
+          example: 200
+        page:
+          type: integer
+          example: 1
+        pageSize:
+          type: integer
+          example: 20
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuditLogDto'
+
+    # khuôn mẫu phân tích FR-014, FR-015
+    DashboardMetricsResponse:
+      type: object
+      properties:
+        dau:
+          type: integer
+          example: 1250
+          description: Daily Active Users
+        wau:
+          type: integer
+          example: 5400
+          description: Weekly Active Users
+        mau:
+          type: integer
+          example: 18200
+          description: Monthly Active Users
+        totalReviewsToday:
+          type: integer
+          example: 15400
+        d1Retention:
+          type: number
+          format: float
+          example: 45.5
+        d7Retention:
+          type: number
+          format: float
+          example: 22.1
+        d30Retention:
+          type: number
+          format: float
+          example: 12.8
