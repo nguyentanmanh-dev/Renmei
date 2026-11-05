@@ -1,21 +1,64 @@
 openapi: 3.0.3
 info:
   title: Renmei Core Learning API Specification
-  description: Tài liệu thiết kế RESTful API chuẩn OpenAPI 3.0 cho phân hệ học viên
-  version: 1.0.0
+  description: Mọi điểm cuối trừ nhóm Auth công khai cần Bearer JWT. Mỗi thao tác có `x-requirements` liệt kê mã yêu cầu để lập RTM. Bản thiết kế chưa được kiểm chứng bằng code.
+  version: 1.1.0
 servers:
   - url: https://api.renmei.app/v1
     description: Production Server
   - url: http://localhost:5000/v1
     description: Local Development Server
 
+security:
+- bearerAuth: []
+tags:
+- name: Auth
+  description: Đăng ký, đăng nhập, token
+- name: Me
+  description: Hồ sơ cá nhân
+- name: Kanji
+  description: Nội dung Kanji đã xuất bản
+- name: Placement-test
+  description: Kiểm tra trình độ đầu vào
+- name: Learning
+  description: Hàng đợi và ôn tập SM-2
+- name: Stats
+  description: Thống kê và chuỗi ngày học
+- name: Feedback
+  description: Báo lỗi và góp ý
+- name: Dialogue
+  description: Hội thoại tình huống
+- name: Arena
+  description: 'Đấu trường: ván chơi, trận, bảng xếp hạng'
+- name: Raids
+  description: Boss Raid
+- name: Cases
+  description: Vụ án Kanji
+- name: Shadowing
+  description: Shadowing Voice Battle
+- name: Friends
+  description: Hồ sơ, kết bạn, cài đặt riêng tư
+- name: Chats
+  description: Nhắn tin riêng giữa bạn bè
+- name: Invitations
+  description: Lời mời thi đấu và lời mời phòng
+- name: Rooms
+  description: Phòng chơi nhiều người
+- name: Notifications
+  description: Thông báo
+- name: Safety
+  description: Chặn và báo cáo
+
+# Xác thực tài khoản
 paths:
-#FR-001: Đăng nhập JWT
-  /auth/register:
+  /api/auth/register:
     post:
-      summary: Đăng ký tài khoản người học mới
       tags:
-        - Authentication
+      - Auth
+      operationId: register
+      summary: Đăng ký tài khoản
+      x-requirements:
+      - FR-001
       requestBody:
         required: true
         content:
@@ -24,19 +67,27 @@ paths:
               $ref: '#/components/schemas/RegisterRequest'
       responses:
         '201':
-          description: Đăng ký thành công
+          description: Thành công
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AuthResponse'
-        '400':
-          description: Dữ liệu đầu vào không hợp lệ hoặc Email đã tồn tại
-
-  /auth/login:
+                $ref: '#/components/schemas/Accepted'
+        '400': &id001
+          $ref: '#/components/responses/BadRequest'
+        '409': &id012
+          $ref: '#/components/responses/Conflict'
+        '429': &id002
+          $ref: '#/components/responses/TooManyRequests'
+      security: []
+  /api/auth/login:
     post:
-      summary: Đăng nhập vào hệ thống
       tags:
-        - Authentication
+      - Auth
+      operationId: login
+      summary: Đăng nhập, nhận JWT
+      x-requirements:
+      - FR-001
+      description: Sai mật khẩu trả 401.
       requestBody:
         required: true
         content:
@@ -45,359 +96,3748 @@ paths:
               $ref: '#/components/schemas/LoginRequest'
       responses:
         '200':
-          description: Đăng nhập thành công, cấp Access Token và Refresh Token
+          description: Thành công
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AuthResponse'
-        '401':
-          description: Sai email hoặc mật khẩu
+                $ref: '#/components/schemas/TokenResponse'
+        '400': *id001
+        '429': *id002
+        '401': &id003
+          $ref: '#/components/responses/Unauthorized'
+      security: []
+  /api/auth/refresh:
+    post:
+      tags:
+      - Auth
+      operationId: refreshToken
+      summary: Làm mới token
+      x-requirements:
+      - FR-001
+      - NFR-002
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshRequest'
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+        '400': *id001
+        '429': *id002
+      security: []
+  /api/auth/logout:
+    post:
+      tags:
+      - Auth
+      operationId: logout
+      summary: Đăng xuất, thu hồi refresh token
+      x-requirements:
+      - FR-001
+      - NFR-002
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshRequest'
+      responses:
+        '204':
+          description: Thành công, không có nội dung
+        '400': *id001
+        '401': *id003
+        '403': &id005
+          $ref: '#/components/responses/Forbidden'
+        '404': &id004
+          $ref: '#/components/responses/NotFound'
+        '429': *id002
+  /api/auth/verify-email:
+    post:
+      tags:
+      - Auth
+      operationId: verifyEmail
+      summary: Xác minh email
+      x-requirements:
+      - NFR-002
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRequest'
+      responses:
+        '204':
+          description: Thành công, không có nội dung
+        '400': *id001
+        '404': *id004
+        '429': *id002
+      security: []
+  /api/auth/forgot-password:
+    post:
+      tags:
+      - Auth
+      operationId: forgotPassword
+      summary: Yêu cầu đặt lại mật khẩu
+      x-requirements:
+      - NFR-002
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ForgotPasswordRequest'
+      responses:
+        '202':
+          description: Thành công, không có nội dung
+        '400': *id001
+        '429': *id002
+      security: []
+  /api/auth/reset-password:
+    post:
+      tags:
+      - Auth
+      operationId: resetPassword
+      summary: Đặt lại mật khẩu
+      x-requirements:
+      - NFR-002
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResetPasswordRequest'
+      responses:
+        '204':
+          description: Thành công, không có nội dung
+        '400': *id001
+        '404': *id004
+        '429': *id002
+      security: []
+  /api/me:
+    get:
+      tags:
+      - Me
+      operationId: getMe
+      summary: Xem hồ sơ của tôi
+      x-requirements:
+      - FR-001
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+
+
+# Hồ sơ cá nhân, cài đặt, mục tiêu học tập, chuỗi ngày học
+    patch:
+      tags:
+      - Me
+      operationId: updateMe
+      summary: Cập nhật mục tiêu ngày, múi giờ, giờ học ưu tiên
+      x-requirements:
+      - FR-004
+      - FR-006
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProfileRequest'
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+    delete:
+      tags:
+      - Me
+      operationId: deleteMyAccount
+      summary: Xóa tài khoản và ẩn danh dữ liệu
+      x-requirements:
+      - NFR-008
+      - FR-011
+      responses:
+        '202':
+          description: Thành công, không có nội dung
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+
+# Nội dung Kanji đã xuất bản, danh sách, chi tiết, media
+  /api/kanji:
+    get:
+      tags:
+      - Kanji
+      operationId: listKanji
+      summary: Danh sách Kanji đã xuất bản
+      x-requirements:
+      - FR-005
+      parameters:
+      - &id009
+        name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 1
+      - &id010
+        name: pageSize
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 20
+          maximum: 100
+      - name: level
+        in: query
+        required: false
+        schema: &id006
+          type: integer
+      - name: q
+        in: query
+        required: false
+        schema: &id008
+          type: string
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedKanji'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+  /api/kanji/{id}:
+    get:
+      tags:
+      - Kanji
+      operationId: getKanji
+      summary: Chi tiết Kanji kèm media
+      x-requirements:
+      - FR-005
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema: *id006
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KanjiDetail'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
 
 #FR-002: Kiểm tra trình độ đầu vào
-  /placement-test/questions:
-    get:
-      summary: Lấy bộ câu hỏi kiểm tra trình độ đầu vào
-      tags:
-        - Placement Test
-      security:
-        - BearerAuth: []
-      responses:
-        '200':
-          description: Danh sách các câu hỏi Placement Test
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/PlacementQuestionDto'
 
-#FR-003: Ôn tập Kanji theo thuật toán SM-2
-#FR-004: Hàng đợi học hằng ngày và Thống kê
-#FR-005: Học từ vựng có hình ảnh minh họa và giọng đọc chuẩn
-  /learning/daily-queue:
-    get:
-      summary: Lấy hàng đợi flashcard Kanji cần học/ôn trong ngày
-      tags:
-        - Learning & SM-2
-      security:
-        - BearerAuth: []
-      responses:
-        '200':
-          description: Thông tin hàng đợi và danh sách thẻ Kanji
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DailyQueueResponse'
-
-  /learning/review:
+  /api/placement-test/attempts:
     post:
-      summary: Gửi đánh giá kết quả ôn tập (Tính toán theo thuật toán SM-2)
       tags:
-        - Learning & SM-2
-      security:
-        - BearerAuth: []
+      - Placement-test
+      operationId: startPlacementTest
+      summary: Bắt đầu bài kiểm tra đầu vào
+      x-requirements:
+      - FR-002
+      responses:
+        '201':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlacementAttempt'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+  /api/placement-test/attempts/{attemptId}/submit:
+    post:
+      tags:
+      - Placement-test
+      operationId: submitPlacementTest
+      summary: Nộp bài, nhận điểm bắt đầu gợi ý
+      x-requirements:
+      - FR-002
+      parameters:
+      - name: attemptId
+        in: path
+        required: true
+        schema: &id007
+          type: string
+          format: uuid
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ReviewSubmitRequest'
+              $ref: '#/components/schemas/PlacementSubmitRequest'
       responses:
         '200':
-          description: Cập nhật chỉ số SM-2 và lịch ôn tập thành công
+          description: Thành công
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ReviewSubmitResponse'
-
-
-#FR-006: Duy trì chuỗi ngày học
-  /users/me/streak:
-    get:
-      summary: Lấy thông tin chuỗi ngày học hiện tại và kỷ lục
-      tags:
-        - Learner Profile
-      security:
-        - BearerAuth: []
-      responses:
-        '200':
-          description: Dữ liệu streak của người dùng
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UserStreakResponse'
-
-
-#FR-007: Hội thoại tình huống ngắn và giao tiếp tự do
-/chat/scenarios:
-    get:
-      summary: Lấy danh sách các tình huống hội thoại đóng vai
-      tags:
-        - Roleplay Chat
-      security:
-        - BearerAuth: []
-      responses:
-        '200':
-          description: Danh sách tình huống roleplay sẵn có
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ChatScenarioDto'
-
-  /chat/message:
+                $ref: '#/components/schemas/PlacementResult'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+  /api/placement-test/skip:
     post:
-      summary: Gửi tin nhắn hội thoại tự do hoặc theo tình huống (AI Roleplay)
       tags:
-        - Roleplay Chat
-      security:
-        - BearerAuth: []
+      - Placement-test
+      operationId: skipPlacementTest
+      summary: Bỏ qua, bắt đầu từ N5
+      x-requirements:
+      - FR-002
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+  /api/me/level:
+    put:
+      tags:
+      - Placement-test
+      operationId: chooseLevel
+      summary: Tự chọn trình độ bắt đầu
+      x-requirements:
+      - FR-002
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ChatMessageRequest'
+              $ref: '#/components/schemas/ChooseLevelRequest'
       responses:
         '200':
-          description: Phản hồi từ AI và gợi ý Kanji liên quan
+          description: Thành công
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ChatMessageResponse'
+                $ref: '#/components/schemas/UserProfile'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
 
-#khuôn mẫu và cổng bảo vệ
+# Học tập, ôn tập, SM-2, hàng đợi, chuỗi ngày học
+  /api/queue/today:
+    get:
+      tags:
+      - Learning
+      operationId: getDailyQueue
+      summary: Hàng đợi học hằng ngày
+      x-requirements:
+      - FR-004
+      description: 'Thứ tự: chữ quên hoặc quá hạn, ôn đúng hạn, chữ mới.'
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DailyQueue'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+  /api/learning/start:
+    post:
+      tags:
+      - Learning
+      operationId: startLearningNewKanji
+      summary: Bắt đầu học chữ mới
+      x-requirements:
+      - FR-004
+      - FR-005
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StartLearningRequest'
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DailyQueue'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+  /api/reviews:
+    post:
+      tags:
+      - Learning
+      operationId: submitReview
+      summary: Chấm một lượt ôn
+      x-requirements:
+      - FR-003
+      - FR-006
+      description: Gửi lại cùng clientEventId không tạo bản ghi mới.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReviewRequest'
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewResult'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+  /api/reviews/batch:
+    post:
+      tags:
+      - Learning
+      operationId: submitReviewBatch
+      summary: Gửi nhiều lượt ôn khi có mạng lại
+      x-requirements:
+      - FR-003
+      - NFR-003
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReviewBatchRequest'
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewBatchResult'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+
+
+# Thống kê học tập, chuỗi ngày học
+  /api/stats/summary:
+    get:
+      tags:
+      - Stats
+      operationId: getStatsSummary
+      summary: Thống kê học tập
+      x-requirements:
+      - FR-004
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatsSummary'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+  /api/streak:
+    get:
+      tags:
+      - Stats
+      operationId: getStreak
+      summary: Chuỗi ngày học và StreakFreeze
+      x-requirements:
+      - FR-006
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StreakStatus'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+
+# Báo lỗi nội dung, góp ý, phản hồi
+  /api/feedback:
+    post:
+      tags:
+      - Feedback
+      operationId: sendFeedback
+      summary: Báo lỗi nội dung hoặc góp ý
+      x-requirements:
+      - FR-012
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FeedbackRequest'
+      responses:
+        '201':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Accepted'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+
+# Hội thoại tình huống, kịch bản, phản hồi
+  /api/dialogues/scenarios:
+    get:
+      tags:
+      - Dialogue
+      operationId: listDialogueScenarios
+      summary: Kịch bản hội thoại theo bài học
+      x-requirements:
+      - FR-007
+      parameters:
+      - name: level
+        in: query
+        required: false
+        schema: *id006
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DialogueScenario'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+  /api/dialogues/sessions:
+    post:
+      tags:
+      - Dialogue
+      operationId: startDialogue
+      summary: Bắt đầu hội thoại
+      x-requirements:
+      - FR-007
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                scenarioId: *id006
+              required:
+              - scenarioId
+      responses:
+        '201':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DialogueSession'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+  /api/dialogues/sessions/{id}/messages:
+    post:
+      tags:
+      - Dialogue
+      operationId: sendDialogueMessage
+      summary: Gửi câu trả lời và nhận phản hồi
+      x-requirements:
+      - FR-007
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema: *id007
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DialogueMessageRequest'
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DialogueReply'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+  /api/dialogues/sessions/{id}/skip:
+    post:
+      tags:
+      - Dialogue
+      operationId: skipDialogue
+      summary: Bỏ qua, hoàn thành bài
+      x-requirements:
+      - FR-007
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema: *id007
+      responses:
+        '204':
+          description: Thành công, không có nội dung
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+
+# Đấu trường: ván chơi, trận, bảng xếp hạng
+  /api/games:
+    get:
+      tags:
+      - Arena
+      operationId: listGames
+      summary: Danh sách trò chơi và khả dụng theo cấp độ
+      x-requirements:
+      - FR-020
+      parameters:
+      - name: level
+        in: query
+        required: false
+        schema: *id006
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GameMode'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+  /api/games/profile:
+    get:
+      tags:
+      - Arena
+      operationId: getGameProfile
+      summary: Hồ sơ người chơi của tôi
+      x-requirements:
+      - FR-022
+      - FR-033
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GameProfile'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+    put:
+      tags:
+      - Arena
+      operationId: updateGameProfile
+      summary: Đặt biệt danh, ẩn khỏi bảng xếp hạng
+      x-requirements:
+      - FR-022
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateGameProfileRequest'
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GameProfile'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+  /api/games/{gameCode}/sessions:
+    post:
+      tags:
+      - Arena
+      operationId: startGameSession
+      summary: Bắt đầu ván
+      x-requirements:
+      - FR-020
+      - FR-021
+      - FR-023
+      - FR-024
+      - FR-025
+      - FR-026
+      - FR-027
+      - FR-028
+      - FR-029
+      - NFR-006
+      parameters:
+      - name: gameCode
+        in: path
+        required: true
+        schema: *id008
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StartSessionRequest'
+      responses:
+        '201':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GameSession'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+  /api/game-sessions/{sessionId}/events:
+    post:
+      tags:
+      - Arena
+      operationId: sendGameEvents
+      summary: Server chấm điểm
+      x-requirements:
+      - NFR-006
+      - NFR-009
+      parameters:
+      - name: sessionId
+        in: path
+        required: true
+        schema: *id007
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GameEventBatch'
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GameEventAck'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+  /api/game-sessions/{sessionId}/complete:
+    post:
+      tags:
+      - Arena
+      operationId: completeGameSession
+      summary: Kết thúc ván, nhận kết quả do Server tính
+      x-requirements:
+      - FR-020
+      - FR-021
+      - NFR-006
+      parameters:
+      - name: sessionId
+        in: path
+        required: true
+        schema: *id007
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionResult'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+  /api/matches:
+    get:
+      tags:
+      - Arena
+      operationId: listMyMatches
+      summary: Các trận của tôi
+      x-requirements:
+      - FR-021
+      - FR-036
+      parameters:
+      - *id009
+      - *id010
+      - name: status
+        in: query
+        required: false
+        schema: *id008
+      - name: matchType
+        in: query
+        required: false
+        schema: *id008
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedMatch'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+  /api/matches/{matchId}:
+    get:
+      tags:
+      - Arena
+      operationId: getMatch
+      summary: Chi tiết trận
+      x-requirements:
+      - FR-021
+      - FR-036
+      parameters:
+      - name: matchId
+        in: path
+        required: true
+        schema: *id007
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MatchView'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+  /api/leaderboards:
+    get:
+      tags:
+      - Arena
+      operationId: getLeaderboard
+      summary: Bảng xếp hạng theo trò chơi, cấp độ, mùa
+      x-requirements:
+      - FR-022
+      - NFR-007
+      parameters:
+      - name: gameCode
+        in: query
+        required: true
+        schema: *id008
+      - name: level
+        in: query
+        required: true
+        schema: *id006
+      - name: seasonId
+        in: query
+        required: false
+        schema: *id006
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Leaderboard'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+  /api/seasons/current:
+    get:
+      tags:
+      - Arena
+      operationId: getCurrentSeason
+      summary: Mùa giải hiện tại
+      x-requirements:
+      - FR-022
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Season'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+  /api/raids/current:
+    get:
+      tags:
+      - Raids
+      operationId: getCurrentBoss
+      summary: Boss đang hoạt động theo cấp độ
+      x-requirements:
+      - FR-030
+      parameters:
+      - name: level
+        in: query
+        required: true
+        schema: *id006
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BossView'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+
+# Boss Raid: bắt đầu lượt tấn công, bảng sát thương bạn bè
+  /api/raids/{bossId}/attempts:
+    post:
+      tags:
+      - Raids
+      operationId: startRaidAttempt
+      summary: Dùng 1 vé và bắt đầu lượt tấn công
+      x-requirements:
+      - FR-030
+      - NFR-006
+      parameters:
+      - name: bossId
+        in: path
+        required: true
+        schema: *id006
+      responses:
+        '201':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GameSession'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+  /api/raids/{bossId}/friends-board:
+    get:
+      tags:
+      - Raids
+      operationId: getRaidFriendsBoard
+      summary: Sát thương của bạn bè trên Boss
+      x-requirements:
+      - FR-030
+      parameters:
+      - name: bossId
+        in: path
+        required: true
+        schema: *id006
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FriendDamageEntry'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+
+# Vụ án: danh sách, chương, giải manh mối, gợi ý
+  /api/cases:
+    get:
+      tags:
+      - Cases
+      operationId: listCases
+      summary: Danh sách vụ án theo cấp độ
+      x-requirements:
+      - FR-031
+      parameters:
+      - name: level
+        in: query
+        required: false
+        schema: *id006
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CaseSummary'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+  /api/cases/{caseId}/current-chapter:
+    get:
+      tags:
+      - Cases
+      operationId: getCurrentCaseChapter
+      summary: Chương hiện tại của vụ án (chơi một mình)
+      x-requirements:
+      - FR-031
+      parameters:
+      - name: caseId
+        in: path
+        required: true
+        schema: *id006
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CaseChapterView'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+  /api/cases/{caseId}/chapters/{chapterId}/answer:
+    post:
+      tags:
+      - Cases
+      operationId: answerCaseChapter
+      summary: Giải manh mối
+      x-requirements:
+      - FR-031
+      parameters:
+      - name: caseId
+        in: path
+        required: true
+        schema: *id006
+      - name: chapterId
+        in: path
+        required: true
+        schema: *id006
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CaseAnswerRequest'
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CaseAnswerResult'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+  /api/cases/{caseId}/chapters/{chapterId}/hint:
+    post:
+      tags:
+      - Cases
+      operationId: useCaseHint
+      summary: Dùng gợi ý (tối đa 3 mỗi chương)
+      x-requirements:
+      - FR-031
+      parameters:
+      - name: caseId
+        in: path
+        required: true
+        schema: *id006
+      - name: chapterId
+        in: path
+        required: true
+        schema: *id006
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HintResult'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+
+# Shadowing: nghe và nhắc lại, chấm điểm
+  /api/shadowing/sessions/{sessionId}/attempts:
+    post:
+      tags:
+      - Shadowing
+      operationId: submitShadowingAttempt
+      summary: Nộp văn bản nhận dạng để chấm điểm (không gửi âm thanh)
+      x-requirements:
+      - FR-032
+      - NFR-008
+      parameters:
+      - name: sessionId
+        in: path
+        required: true
+        schema: *id007
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShadowingSubmitRequest'
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShadowingResult'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+
+# Friends: tìm bạn, danh sách bạn bè, xóa bạn, thành tích đối đầu
+  /api/players/search:
+    get:
+      tags:
+      - Friends
+      operationId: searchPlayer
+      summary: Tìm người chơi theo biệt danh hoặc mã bạn bè (khớp chính xác)
+      x-requirements:
+      - FR-034
+      parameters:
+      - name: nickname
+        in: query
+        required: false
+        schema: *id008
+      - name: friendCode
+        in: query
+        required: false
+        schema: *id008
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicProfile'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+  /api/players/{userId}:
+    get:
+      tags:
+      - Friends
+      operationId: getPlayerProfile
+      summary: Hồ sơ công khai của người chơi
+      x-requirements:
+      - FR-033
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        schema: *id007
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicProfile'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+  /api/social/settings:
+    get:
+      tags:
+      - Friends
+      operationId: getSocialSettings
+      summary: Cài đặt riêng tư xã hội
+      x-requirements:
+      - FR-033
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SocialSettings'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+    put:
+      tags:
+      - Friends
+      operationId: updateSocialSettings
+      summary: Đổi cài đặt nhận lời mời, tin nhắn, thi đấu
+      x-requirements:
+      - FR-033
+      - FR-039
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SocialSettings'
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SocialSettings'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+  /api/social/terms/accept:
+    post:
+      tags:
+      - Friends
+      operationId: acceptSocialTerms
+      summary: Đồng ý quy tắc ứng xử lần đầu
+      x-requirements:
+      - FR-033
+      - NFR-011
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AcceptTermsRequest'
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SocialSettings'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+  /api/friends:
+    get:
+      tags:
+      - Friends
+      operationId: listFriends
+      summary: Danh sách bạn bè
+      x-requirements:
+      - FR-034
+      parameters: &id011
+      - *id009
+      - *id010
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedFriends'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+  /api/friends/{userId}:
+    delete:
+      tags:
+      - Friends
+      operationId: removeFriend
+      summary: Xóa bạn
+      x-requirements:
+      - FR-034
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        schema: *id007
+      responses:
+        '204':
+          description: Thành công, không có nội dung
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+  /api/friends/{userId}/head-to-head:
+    get:
+      tags:
+      - Friends
+      operationId: getHeadToHead
+      summary: Thành tích đối đầu với một người bạn
+      x-requirements:
+      - FR-036
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        schema: *id007
+      - name: gameCode
+        in: query
+        required: false
+        schema: *id008
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HeadToHead'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+  /api/friend-requests:
+    post:
+      tags:
+      - Friends
+      operationId: sendFriendRequest
+      summary: Gửi lời mời kết bạn
+      x-requirements:
+      - FR-034
+      - FR-039
+      description: Trả cùng kết quả khi người nhận đã tắt nhận lời mời hoặc đã chặn, để không lộ cài đặt (ADR-017).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FriendRequestCreate'
+      responses:
+        '202':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Accepted'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+    get:
+      tags:
+      - Friends
+      operationId: listFriendRequests
+      summary: Lời mời kết bạn đến và đi
+      x-requirements:
+      - FR-034
+      parameters:
+      - name: direction
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - Incoming
+          - Outgoing
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FriendRequestView'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+  /api/friend-requests/{id}/accept:
+    post:
+      tags:
+      - Friends
+      operationId: acceptFriendRequest
+      summary: Chấp nhận lời mời kết bạn
+      x-requirements:
+      - FR-034
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema: *id007
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FriendView'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+  /api/friend-requests/{id}/decline:
+    post:
+      tags:
+      - Friends
+      operationId: declineFriendRequest
+      summary: Từ chối lời mời
+      x-requirements:
+      - FR-034
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema: *id007
+      responses:
+        '204':
+          description: Thành công, không có nội dung
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+  /api/friend-requests/{id}/cancel:
+    post:
+      tags:
+      - Friends
+      operationId: cancelFriendRequest
+      summary: Hủy lời mời đã gửi
+      x-requirements:
+      - FR-034
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema: *id007
+      responses:
+        '204':
+          description: Thành công, không có nội dung
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+
+# Safety: chặn người dùng, báo cáo tin nhắn, người dùng hoặc trận
+  /api/blocks:
+    get:
+      tags:
+      - Safety
+      operationId: listBlocks
+      summary: Danh sách người đã chặn
+      x-requirements:
+      - FR-039
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BlockedUser'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+  /api/blocks/{userId}:
+    put:
+      tags:
+      - Safety
+      operationId: blockUser
+      summary: Chặn một người dùng
+      x-requirements:
+      - FR-039
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        schema: *id007
+      responses:
+        '204':
+          description: Thành công, không có nội dung
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+    delete:
+      tags:
+      - Safety
+      operationId: unblockUser
+      summary: Bỏ chặn
+      x-requirements:
+      - FR-039
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        schema: *id007
+      responses:
+        '204':
+          description: Thành công, không có nội dung
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+  /api/reports:
+    post:
+      tags:
+      - Safety
+      operationId: createReport
+      summary: Báo cáo tin nhắn, người dùng hoặc trận
+      x-requirements:
+      - FR-039
+      - NFR-011
+      description: Server chụp bằng chứng (tin bị báo cáo và vài tin lân cận) tại thời điểm báo cáo.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateReportRequest'
+      responses:
+        '201':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportReceipt'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+
+# Chats: danh sách hội thoại, lịch sử tin nhắn, gửi tin nhắn, đánh dấu đã đọc, xóa tin
+  /api/chats:
+    get:
+      tags:
+      - Chats
+      operationId: listConversations
+      summary: Danh sách hội thoại
+      x-requirements:
+      - FR-035
+      parameters: *id011
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ConversationView'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+  /api/chats/{friendUserId}/messages:
+    get:
+      tags:
+      - Chats
+      operationId: listMessages
+      summary: Lịch sử tin nhắn (phân trang theo khóa)
+      x-requirements:
+      - FR-035
+      - NFR-010
+      parameters:
+      - name: friendUserId
+        in: path
+        required: true
+        schema: *id007
+      - name: beforeId
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int64
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 30
+          maximum: 100
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessagePage'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+    post:
+      tags:
+      - Chats
+      operationId: sendMessage
+      summary: Gửi tin nhắn cho bạn bè
+      x-requirements:
+      - FR-035
+      - NFR-010
+      - NFR-008
+      description: Gửi lại cùng clientMessageId trả lại tin đã có. Không phải bạn bè, bị chặn hoặc bị ChatMute trả 403 kèm lý do.
+      parameters:
+      - name: friendUserId
+        in: path
+        required: true
+        schema: *id007
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendMessageRequest'
+      responses:
+        '201':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageView'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '409': *id012
+        '429': *id002
+  /api/chats/{friendUserId}/read:
+    post:
+      tags:
+      - Chats
+      operationId: markConversationRead
+      summary: Đánh dấu đã đọc
+      x-requirements:
+      - FR-035
+      parameters:
+      - name: friendUserId
+        in: path
+        required: true
+        schema: *id007
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MarkReadRequest'
+      responses:
+        '204':
+          description: Thành công, không có nội dung
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+  /api/messages/{messageId}:
+    delete:
+      tags:
+      - Chats
+      operationId: deleteMessage
+      summary: Xóa tin của chính mình
+      x-requirements:
+      - FR-035
+      parameters:
+      - name: messageId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '204':
+          description: Thành công, không có nội dung
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+
+# Invitations: mời thi đấu 1 vs 1, mời vào phòng, chấp nhận, từ chối, hủy lời mời
+  /api/game-invitations:
+    post:
+      tags:
+      - Invitations
+      operationId: createGameInvitation
+      summary: Mời bạn thi đấu 1 vs 1
+      x-requirements:
+      - FR-036
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateInvitationRequest'
+      responses:
+        '201':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvitationView'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '409': *id012
+        '429': *id002
+    get:
+      tags:
+      - Invitations
+      operationId: listGameInvitations
+      summary: Lời mời thi đấu và lời mời phòng
+      x-requirements:
+      - FR-036
+      - FR-037
+      parameters:
+      - name: direction
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - Incoming
+          - Outgoing
+      - name: status
+        in: query
+        required: false
+        schema: *id008
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/InvitationView'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+  /api/game-invitations/{id}/accept:
+    post:
+      tags:
+      - Invitations
+      operationId: acceptGameInvitation
+      summary: Chấp nhận (tạo trận giao hữu hoặc vào phòng)
+      x-requirements:
+      - FR-036
+      - FR-037
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema: *id007
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvitationView'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+  /api/game-invitations/{id}/decline:
+    post:
+      tags:
+      - Invitations
+      operationId: declineGameInvitation
+      summary: Từ chối
+      x-requirements:
+      - FR-036
+      - FR-037
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema: *id007
+      responses:
+        '204':
+          description: Thành công, không có nội dung
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+  /api/game-invitations/{id}/cancel:
+    post:
+      tags:
+      - Invitations
+      operationId: cancelGameInvitation
+      summary: Hủy lời mời đã gửi
+      x-requirements:
+      - FR-036
+      - FR-037
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema: *id007
+      responses:
+        '204':
+          description: Thành công, không có nội dung
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+  /api/matches/{matchId}/rematch:
+    post:
+      tags:
+      - Invitations
+      operationId: rematch
+      summary: Đấu lại với cùng bạn, trò chơi, cấp độ
+      x-requirements:
+      - FR-036
+      parameters:
+      - name: matchId
+        in: path
+        required: true
+        schema: *id007
+      responses:
+        '201':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvitationView'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+
+# Rooms: tạo phòng, vào phòng, rời phòng, mời bạn, bắt đầu, tiến độ vụ án
+  /api/game-rooms:
+    post:
+      tags:
+      - Rooms
+      operationId: createRoom
+      summary: Tạo phòng chơi nhiều người
+      x-requirements:
+      - FR-037
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRoomRequest'
+      responses:
+        '201':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoomView'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+    get:
+      tags:
+      - Rooms
+      operationId: listMyRooms
+      summary: Các phòng của tôi
+      x-requirements:
+      - FR-037
+      parameters:
+      - *id009
+      - *id010
+      - name: status
+        in: query
+        required: false
+        schema: *id008
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedRooms'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+  /api/game-rooms/join:
+    post:
+      tags:
+      - Rooms
+      operationId: joinRoomByCode
+      summary: Vào phòng bằng mã
+      x-requirements:
+      - FR-037
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JoinRoomRequest'
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoomView'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+  /api/game-rooms/{roomId}:
+    get:
+      tags:
+      - Rooms
+      operationId: getRoom
+      summary: Chi tiết phòng
+      x-requirements:
+      - FR-037
+      parameters:
+      - name: roomId
+        in: path
+        required: true
+        schema: *id007
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoomView'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+  /api/game-rooms/{roomId}/invite:
+    post:
+      tags:
+      - Rooms
+      operationId: inviteToRoom
+      summary: Mời bạn vào phòng
+      x-requirements:
+      - FR-037
+      parameters:
+      - name: roomId
+        in: path
+        required: true
+        schema: *id007
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InviteToRoomRequest'
+      responses:
+        '201':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvitationView'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+  /api/game-rooms/{roomId}/leave:
+    post:
+      tags:
+      - Rooms
+      operationId: leaveRoom
+      summary: Rời phòng
+      x-requirements:
+      - FR-037
+      parameters:
+      - name: roomId
+        in: path
+        required: true
+        schema: *id007
+      responses:
+        '204':
+          description: Thành công, không có nội dung
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+  /api/game-rooms/{roomId}/start:
+    post:
+      tags:
+      - Rooms
+      operationId: startRoom
+      summary: Chủ phòng bắt đầu
+      x-requirements:
+      - FR-037
+      parameters:
+      - name: roomId
+        in: path
+        required: true
+        schema: *id007
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoomView'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+  /api/game-rooms/{roomId}/case:
+    get:
+      tags:
+      - Rooms
+      operationId: getRoomCaseState
+      summary: Tiến độ chung của Vụ án đồng đội
+      x-requirements:
+      - FR-037
+      - FR-031
+      parameters:
+      - name: roomId
+        in: path
+        required: true
+        schema: *id007
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoomCaseState'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+  /api/game-rooms/{roomId}/case/chapters/{chapterId}/answer:
+    post:
+      tags:
+      - Rooms
+      operationId: answerRoomCaseChapter
+      summary: Giải manh mối trong phòng
+      x-requirements:
+      - FR-037
+      - FR-031
+      parameters:
+      - name: roomId
+        in: path
+        required: true
+        schema: *id007
+      - name: chapterId
+        in: path
+        required: true
+        schema: *id006
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CaseAnswerRequest'
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CaseAnswerResult'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '409': *id012
+        '429': *id002
+  /api/game-rooms/{roomId}/case/chapters/{chapterId}/hint:
+    post:
+      tags:
+      - Rooms
+      operationId: useRoomCaseHint
+      summary: Dùng gợi ý chung của nhóm
+      x-requirements:
+      - FR-037
+      - FR-031
+      parameters:
+      - name: roomId
+        in: path
+        required: true
+        schema: *id007
+      - name: chapterId
+        in: path
+        required: true
+        schema: *id006
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HintResult'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '409': *id012
+        '429': *id002
+  /api/game-rooms/{roomId}/shadowing:
+    get:
+      tags:
+      - Rooms
+      operationId: getRoomShadowingState
+      summary: Bộ đoạn âm thanh của phòng Shadowing
+      x-requirements:
+      - FR-037
+      - FR-032
+      parameters:
+      - name: roomId
+        in: path
+        required: true
+        schema: *id007
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoomShadowingState'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+  /api/game-rooms/{roomId}/shadowing/submissions:
+    post:
+      tags:
+      - Rooms
+      operationId: submitRoomShadowing
+      summary: Nộp kết quả một đoạn trong phòng
+      x-requirements:
+      - FR-037
+      - FR-032
+      - NFR-008
+      parameters:
+      - name: roomId
+        in: path
+        required: true
+        schema: *id007
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShadowingSubmitRequest'
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShadowingResult'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+  /api/game-rooms/{roomId}/results:
+    get:
+      tags:
+      - Rooms
+      operationId: getRoomResults
+      summary: Kết quả phòng
+      x-requirements:
+      - FR-037
+      parameters:
+      - name: roomId
+        in: path
+        required: true
+        schema: *id007
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoomResult'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+  /api/quick-messages:
+    get:
+      tags:
+      - Rooms
+      operationId: listQuickMessages
+      summary: Danh sách lời nhắn nhanh định sẵn
+      x-requirements:
+      - FR-037
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/QuickMessage'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+  /api/game-rooms/{roomId}/quick-messages:
+    post:
+      tags:
+      - Rooms
+      operationId: sendQuickMessage
+      summary: Gửi lời nhắn nhanh trong phòng
+      x-requirements:
+      - FR-037
+      parameters:
+      - name: roomId
+        in: path
+        required: true
+        schema: *id007
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendQuickMessageRequest'
+      responses:
+        '201':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoomQuickMessage'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+    get:
+      tags:
+      - Rooms
+      operationId: listRoomQuickMessages
+      summary: Lời nhắn nhanh đã gửi trong phòng
+      x-requirements:
+      - FR-037
+      parameters:
+      - name: roomId
+        in: path
+        required: true
+        schema: *id007
+      - name: afterId
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RoomQuickMessage'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+
+# Notifications: danh sách thông báo, số chưa đọc, đánh dấu đã đọc, cài đặt thông báo, đăng ký thiết bị
+  /api/notifications:
+    get:
+      tags:
+      - Notifications
+      operationId: listNotifications
+      summary: Trung tâm thông báo
+      x-requirements:
+      - FR-038
+      parameters:
+      - *id009
+      - *id010
+      - name: unreadOnly
+        in: query
+        required: false
+        schema: &id013
+          type: boolean
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedNotifications'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+  /api/notifications/unread-count:
+    get:
+      tags:
+      - Notifications
+      operationId: getUnreadCount
+      summary: Số chưa đọc
+      x-requirements:
+      - FR-038
+      - FR-035
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnreadCount'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+  /api/notifications/{id}/read:
+    post:
+      tags:
+      - Notifications
+      operationId: markNotificationRead
+      summary: Đánh dấu đã đọc
+      x-requirements:
+      - FR-038
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema: *id007
+      responses:
+        '204':
+          description: Thành công, không có nội dung
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+  /api/notifications/read-all:
+    post:
+      tags:
+      - Notifications
+      operationId: markAllNotificationsRead
+      summary: Đánh dấu đọc hết
+      x-requirements:
+      - FR-038
+      responses:
+        '204':
+          description: Thành công, không có nội dung
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+  /api/notification-settings:
+    get:
+      tags:
+      - Notifications
+      operationId: getNotificationSettings
+      summary: Cài đặt thông báo theo loại
+      x-requirements:
+      - FR-038
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationSettings'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+    put:
+      tags:
+      - Notifications
+      operationId: updateNotificationSettings
+      summary: Bật hoặc tắt từng loại thông báo
+      x-requirements:
+      - FR-038
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationSettings'
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationSettings'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+  /api/devices:
+    post:
+      tags:
+      - Notifications
+      operationId: registerDevice
+      summary: Đăng ký Token của thiết bị di động lên máy chủ Backend thông qua dịch vụ Firebase Cloud Messaging
+      x-requirements:
+      - FR-038
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterDeviceRequest'
+      responses:
+        '201':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Accepted'
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+  /api/devices/{id}:
+    delete:
+      tags:
+      - Notifications
+      operationId: unregisterDevice
+      summary: Hủy đăng ký thiết bị
+      x-requirements:
+      - FR-038
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema: *id007
+      responses:
+        '204':
+          description: Thành công, không có nội dung
+        '400': *id001
+        '401': *id003
+        '403': *id005
+        '404': *id004
+        '429': *id002
+
+# Bảo mật
 components:
   securitySchemes:
-    BearerAuth:
+    bearerAuth:
       type: http
       scheme: bearer
       bearerFormat: JWT
+  responses:
+    BadRequest:
+      description: Dữ liệu không hợp lệ
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+    Unauthorized:
+      description: Chưa đăng nhập hoặc token hết hạn
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+    Forbidden:
+      description: Không đủ quyền truy cập hoặc bị chặn
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+    NotFound:
+      description: Không tìm thấy dữ liệu người dùng
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+    Conflict:
+      description: Vi phạm quy tắc nghiệp vụ hoặc đã có người đã đăng ký trước (trùng email))
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+    TooManyRequests:
+      description: Gửi request vượt quá giới hạn
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
 
+
+# Định nghĩa các kiểu dữ liệu
   schemas:
-    # khuôn mẫu đăng ký FR-001
+    ProblemDetails:
+      type: object
+      properties:
+        type: *id008
+        title: *id008
+        status: *id006
+        detail: *id008
+        errors:
+          type: object
+          additionalProperties:
+            type: array
+            items: *id008
+      required:
+      - title
+      - status
+      description: RFC 7807
     RegisterRequest:
       type: object
-      required:
-        - email
-        - password
-        - fullName
       properties:
         email:
           type: string
           format: email
-          example: learner@renmei.app
         password:
           type: string
-          format: password
           minLength: 8
-          example: "Password123!"
-        fullName:
-          type: string
-          example: "Nguyễn Tấn Mạnh"
-
+        displayName: *id008
+      required:
+      - email
+      - password
     LoginRequest:
       type: object
-      required:
-        - email
-        - password
       properties:
         email:
           type: string
           format: email
-          example: learner@renmei.app
-        password:
-          type: string
-          format: password
-          example: "Password123!"
-
-    AuthResponse:
+        password: *id008
+      required:
+      - email
+      - password
+    RefreshRequest:
       type: object
       properties:
-        accessToken:
+        refreshToken: *id008
+      required:
+      - refreshToken
+    TokenResponse:
+      type: object
+      properties:
+        accessToken: *id008
+        refreshToken: *id008
+        expiresInSeconds: *id006
+        user:
+          $ref: '#/components/schemas/UserProfile'
+      required:
+      - accessToken
+      - refreshToken
+      - expiresInSeconds
+    TokenRequest:
+      type: object
+      properties:
+        token: *id008
+      required:
+      - token
+    ForgotPasswordRequest:
+      type: object
+      properties:
+        email:
           type: string
-          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-        refreshToken:
+          format: email
+      required:
+      - email
+    ResetPasswordRequest:
+      type: object
+      properties:
+        token: *id008
+        newPassword:
           type: string
-          example: "c0a80101-0000-0000-0000-000000000001"
-        expiresIn:
+          minLength: 8
+      required:
+      - token
+      - newPassword
+    UserProfile:
+      type: object
+      properties:
+        id: *id007
+        email: *id008
+        displayName: *id008
+        currentLevel:
           type: integer
-          example: 3600
-
-    # khuôn mẫu test đầu vào FR-002
-    PlacementQuestionDto:
+          minimum: 1
+          maximum: 5
+          description: 5, 4, 3, 2, 1 = N5, N4, N3, N2, N1
+        dailyNewCardGoal: *id006
+        timeZone: *id008
+        preferredStudyTime:
+          type: string
+          example: '20:00'
+        emailConfirmed: *id013
+    UpdateProfileRequest:
       type: object
       properties:
-        id:
-          type: string
-          format: uuid
-        content:
-          type: string
-          example: "Chọn âm Hán Việt đúng của chữ 日:"
-        jlptLevel:
-          type: string
-          example: "N5"
-        options:
-          type: array
-          items:
-            $ref: '#/components/schemas/PlacementOptionDto'
-
-    PlacementOptionDto:
+        displayName: *id008
+        dailyNewCardGoal: *id006
+        timeZone: *id008
+        preferredStudyTime: *id008
+        currentLevel: *id006
+    Reading:
       type: object
       properties:
-        id:
+        type:
           type: string
-          format: uuid
-        optionText:
-          type: string
-          example: "NHẬT"
-
-    # khuôn mẫu hàng đợi, thuật toán, hình ảnh FR-003, FR-004, FR-005
-    DailyQueueResponse:
+          enum:
+          - 'On'
+          - Kun
+        kana: *id008
+        romaji: *id008
+    Meaning:
       type: object
       properties:
-        date:
+        language:
           type: string
-          format: date
-          example: "2026-11-03"
-        newCardsCount:
-          type: integer
-          example: 5
-        reviewCardsCount:
-          type: integer
-          example: 15
-        kanjiList:
-          type: array
-          items:
-            $ref: '#/components/schemas/KanjiCardDto'
-
-    KanjiCardDto:
+          enum:
+          - vi
+          - en
+        type:
+          type: string
+          enum:
+          - HanViet
+          - Meaning
+        text: *id008
+    ExampleWord:
       type: object
       properties:
-        kanjiId:
-          type: string
-          format: uuid
-        character:
-          type: string
-          example: "日"
+        word: *id008
+        reading: *id008
+        meaningVi: *id008
+        sentenceJa: *id008
+    KanjiSummary:
+      type: object
+      properties:
+        id: *id006
+        character: *id008
+        jlptLevel: *id006
         hanViet:
-          type: string
-          example: "NHẬT"
-        jlptLevel:
-          type: string
-          example: "N5"
-        strokeCount:
-          type: integer
-          example: 4
+          type: array
+          items: *id008
+    KanjiDetail:
+      type: object
+      properties:
+        id: *id006
+        character: *id008
+        jlptLevel: *id006
+        strokeCount: *id006
+        radical: *id008
+        mnemonicVi: *id008
+        mnemonicImageUrl: *id008
+        strokeOrderGifUrl: *id008
+        audioUrl: *id008
+        readings:
+          type: array
+          items:
+            $ref: '#/components/schemas/Reading'
         meanings:
           type: array
           items:
-            type: string
-          example: ["Mặt trời", "Ngày"]
-        mnemonicStory:
+            $ref: '#/components/schemas/Meaning'
+        exampleWords:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExampleWord'
+        state:
           type: string
-          example: "Hình ảnh mặt trời hình tròn có gạch ở giữa."
-        mnemonicImageUrl:
-          type: string
-          example: "https://cdn.renmei.app/images/kanji/nichi.png"
-        audioUrl:
-          type: string
-          example: "https://cdn.renmei.app/audio/kanji/nichi.mp3"
-
-    ReviewSubmitRequest:
+          enum:
+          - New
+          - Learning
+          - Review
+          - Mastered
+    PagedKanji:
       type: object
-      required:
-        - kanjiId
-        - score
       properties:
-        kanjiId:
-          type: string
-          format: uuid
-        score:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/KanjiSummary'
+        page: *id006
+        pageSize: *id006
+        totalItems: *id006
+        totalPages: *id006
+      required:
+      - items
+      - page
+      - pageSize
+      - totalItems
+      - totalPages
+    PlacementOption:
+      type: object
+      properties:
+        id: *id006
+        text: *id008
+    PlacementQuestion:
+      type: object
+      properties:
+        id: *id006
+        level: *id006
+        prompt: *id008
+        options:
+          type: array
+          items:
+            $ref: '#/components/schemas/PlacementOption'
+    PlacementAttempt:
+      type: object
+      properties:
+        attemptId: *id007
+        questions:
+          type: array
+          items:
+            $ref: '#/components/schemas/PlacementQuestion'
+    PlacementSubmitRequest:
+      type: object
+      properties:
+        answers:
+          type: array
+          items:
+            type: object
+            properties:
+              questionId: *id006
+              optionId: *id006
+            required:
+            - questionId
+            - optionId
+      required:
+      - answers
+    PlacementResult:
+      type: object
+      properties:
+        score: *id006
+        total: *id006
+        suggestedLevel:
           type: integer
-          description: Điểm SM-2 từ 0 đến 5
+          description: Điểm bắt đầu gợi ý, không phải đánh giá chính thức
+    ChooseLevelRequest:
+      type: object
+      properties:
+        level:
+          type: integer
+          minimum: 1
+          maximum: 5
+      required:
+      - level
+    QueueItem:
+      type: object
+      properties:
+        kanjiId: *id006
+        kind:
+          type: string
+          enum:
+          - Overdue
+          - Review
+          - New
+        dueDate: &id014
+          type: string
+          format: date
+        kanji:
+          $ref: '#/components/schemas/KanjiDetail'
+    DailyQueue:
+      type: object
+      properties:
+        date: *id014
+        newCardsCount: *id006
+        reviewCardsCount: *id006
+        dailyGoal: *id006
+        completedToday: *id006
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/QueueItem'
+    StreakStatus:
+      type: object
+      properties:
+        currentStreak: *id006
+        longestStreak: *id006
+        streakFreezeCount: *id006
+        lastStudyDate: *id014
+        streakIncreasedNow: *id013
+    ReviewRequest:
+      type: object
+      properties:
+        clientEventId: *id007
+        kanjiId: *id006
+        rating:
+          type: integer
           minimum: 0
           maximum: 5
-          example: 4
-
-    ReviewSubmitResponse:
+          description: Điểm SM-2 0, 1, 2, 3, 4, 5. Từ 3 trở lên là nhớ
+        timeTakenMs: *id006
+        reviewedAt: &id016
+          type: string
+          format: date-time
+      required:
+      - clientEventId
+      - kanjiId
+      - rating
+    ReviewResult:
       type: object
       properties:
-        kanjiId:
+        kanjiId: *id006
+        state:
           type: string
-          format: uuid
-        newEaseFactor:
+          enum:
+          - New
+          - Learning
+          - Review
+          - Mastered
+        intervalDays: *id006
+        easeFactor: &id015
           type: number
-          format: float
-          example: 2.36
-        nextIntervalDays:
-          type: integer
-          example: 6
-        dueDate:
-          type: string
-          format: date
-          example: "2026-11-09"
-
-    # khuôn mẫu giữu chuỗi FR-006
-    UserStreakResponse:
+        nextReviewDate: *id014
+        streak:
+          $ref: '#/components/schemas/StreakStatus'
+        remainingNew: *id006
+        remainingReview: *id006
+        duplicate: *id013
+    ReviewBatchRequest:
       type: object
       properties:
-        currentStreak:
-          type: integer
-          example: 7
-        longestStreak:
-          type: integer
-          example: 14
-        freezeItemCount:
-          type: integer
-          example: 1
-        lastLearnedDate:
+        reviews:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReviewRequest'
+      required:
+      - reviews
+    ReviewBatchResult:
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReviewResult'
+    StartLearningRequest:
+      type: object
+      properties:
+        kanjiIds:
+          type: array
+          items: *id006
+    LevelProgress:
+      type: object
+      properties:
+        level: *id006
+        learned: *id006
+        mastered: *id006
+        total: *id006
+    StatsSummary:
+      type: object
+      properties:
+        recallRate7d: *id015
+        learnedCount: *id006
+        masteredCount: *id006
+        reviewsToday: *id006
+        byLevel:
+          type: array
+          items:
+            $ref: '#/components/schemas/LevelProgress'
+    FeedbackRequest:
+      type: object
+      properties:
+        type:
           type: string
-          format: date
-          example: "2026-11-03"
-
-    # khuôn mẫu hội thoại FR-007
-    ChatScenarioDto:
+          enum:
+          - ContentError
+          - Bug
+          - Suggestion
+        message: *id008
+        kanjiId: *id006
+        appVersion: *id008
+      required:
+      - type
+      - message
+    Accepted:
+      type: object
+      properties:
+        id: *id008
+        status: *id008
+    DialogueScenario:
+      type: object
+      properties:
+        id: *id006
+        title: *id008
+        level: *id006
+        vocabulary:
+          type: array
+          items: *id008
+    DialogueSession:
+      type: object
+      properties:
+        sessionId: *id007
+        scenario:
+          $ref: '#/components/schemas/DialogueScenario'
+        firstMessage: *id008
+    DialogueMessageRequest:
+      type: object
+      properties:
+        text: *id008
+        clientMessageId: *id007
+      required:
+      - text
+    DialogueReply:
+      type: object
+      properties:
+        reply: *id008
+        corrections:
+          type: array
+          items: *id008
+        suggestion: *id008
+    GameMode:
+      type: object
+      properties:
+        code:
+          type: string
+          enum:
+          - KARUTA
+          - SHIRITORI
+          - MENKO
+          - HANAFUDA
+          - KINGYO
+          - TOBE_GETA
+          - KENDAMA
+          - BOSS_RAID
+          - KANJI_CASE
+          - SHADOWING
+        name: *id008
+        groupCode:
+          type: string
+          enum:
+          - Traditional
+          - BossRaid
+          - Case
+          - Voice
+        isEnabled: *id013
+        supportsRanked: *id013
+        supportsPractice: *id013
+        isOneVsOne: *id013
+        supportsRoom: *id013
+        minKanjiRequired: *id006
+        available: *id013
+        unavailableReason: *id008
+    GameProfile:
+      type: object
+      properties:
+        userId: *id007
+        nickname: *id008
+        friendCode: *id008
+        xp: *id006
+        hideFromLeaderboard: *id013
+        raidTickets: *id006
+        isRankBanned: *id013
+    UpdateGameProfileRequest:
+      type: object
+      properties:
+        nickname:
+          type: string
+          minLength: 3
+          maxLength: 20
+        hideFromLeaderboard: *id013
+    StartSessionRequest:
+      type: object
+      properties:
+        level: *id006
+        mode:
+          type: string
+          enum:
+          - Practice
+          - Ranked
+      required:
+      - level
+      - mode
+    GameSession:
+      type: object
+      properties:
+        sessionId: *id007
+        gameCode: *id008
+        level: *id006
+        mode: *id008
+        seed:
+          type: integer
+          format: int64
+        matchId: *id007
+        roomId: *id007
+        content:
+          type: object
+          additionalProperties: true
+          description: Nội dung vòng chơi theo từng trò khác nhau
+    GameEvent:
+      type: object
+      properties:
+        clientEventId: *id007
+        seq: *id006
+        type: *id008
+        payload:
+          type: object
+          additionalProperties: true
+        clientTime: *id016
+      required:
+      - clientEventId
+      - seq
+      - type
+    GameEventBatch:
+      type: object
+      properties:
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/GameEvent'
+      required:
+      - events
+    GameEventAck:
+      type: object
+      properties:
+        accepted: *id006
+        duplicates: *id006
+        rejected: *id006
+    SessionResult:
+      type: object
+      properties:
+        sessionId: *id007
+        serverScore: *id006
+        durationMs: *id006
+        wrongKanjiIds:
+          type: array
+          items: *id006
+        suggestedReviewKanjiIds:
+          type: array
+          items: *id006
+        matchStatus: *id008
+        matchResult:
+          type: string
+          enum:
+          - Win
+          - Loss
+          - Draw
+          - None
+        rankDelta: *id006
+        damage: *id006
+    MatchPlayerView:
+      type: object
+      properties:
+        slot: *id006
+        nickname: *id008
+        score: *id006
+        result:
+          type: string
+          enum:
+          - Win
+          - Loss
+          - Draw
+          - None
+        rankDelta: *id006
+        isGhost: *id013
+    MatchView:
+      type: object
+      properties:
+        id: *id007
+        gameCode: *id008
+        level: *id006
+        matchType:
+          type: string
+          enum:
+          - Ranked
+          - Friendly
+        status:
+          type: string
+          enum:
+          - Open
+          - WaitingOpponent
+          - Completed
+          - Abandoned
+          - Cancelled
+        expiresAt: *id016
+        players:
+          type: array
+          items:
+            $ref: '#/components/schemas/MatchPlayerView'
+    PagedMatch:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/MatchView'
+        page: *id006
+        pageSize: *id006
+        totalItems: *id006
+        totalPages: *id006
+      required:
+      - items
+      - page
+      - pageSize
+      - totalItems
+      - totalPages
+    LeaderboardEntry:
+      type: object
+      properties:
+        rank: *id006
+        nickname: *id008
+        rankPoints: *id006
+    Leaderboard:
+      type: object
+      properties:
+        gameCode: *id008
+        level: *id006
+        seasonId: *id006
+        entries:
+          type: array
+          items:
+            $ref: '#/components/schemas/LeaderboardEntry'
+        me:
+          $ref: '#/components/schemas/LeaderboardEntry'
+    Season:
+      type: object
+      properties:
+        id: *id006
+        name: *id008
+        startsAt: *id016
+        endsAt: *id016
+    Badge:
+      type: object
+      properties:
+        code: *id008
+        name: *id008
+        awardedAt: *id016
+    BossView:
+      type: object
+      properties:
+        id: *id006
+        name: *id008
+        level: *id006
+        maxHp: *id006
+        currentHp: *id006
+        endsAt: *id016
+        status: *id008
+        myTickets: *id006
+        myDamage: *id006
+    FriendDamageEntry:
+      type: object
+      properties:
+        nickname: *id008
+        damage: *id006
+        isMe: *id013
+    CaseSummary:
+      type: object
+      properties:
+        id: *id006
+        title: *id008
+        level: *id006
+        chapterCount: *id006
+        myCurrentChapter: *id006
+        myStars: *id006
+        completed: *id013
+    CaseChapterView:
+      type: object
+      properties:
+        chapterId: *id006
+        chapterNo: *id006
+        storyText: *id008
+        puzzleType:
+          type: string
+          enum:
+          - Reading
+          - Meaning
+          - Radical
+        kanjiIds:
+          type: array
+          items: *id006
+        hintsUsed: *id006
+        hints:
+          type: array
+          items: *id008
+    CaseAnswerRequest:
+      type: object
+      properties:
+        answer: *id008
+        clientEventId: *id007
+      required:
+      - answer
+    CaseAnswerResult:
+      type: object
+      properties:
+        correct: *id013
+        alreadySolvedBy: *id008
+        nextChapterNo: *id006
+        completed: *id013
+        stars: *id006
+    HintResult:
+      type: object
+      properties:
+        hint: *id008
+        hintsUsed: *id006
+        maxHints: *id006
+    ShadowingClip:
+      type: object
+      properties:
+        id: *id006
+        text: *id008
+        reading: *id008
+        audioUrl: *id008
+        durationMs: *id006
+    ShadowingSubmitRequest:
+      type: object
+      properties:
+        clipId: *id006
+        recognizedText: *id008
+        engineVersion: *id008
+        clientEventId: *id007
+      required:
+      - clipId
+      - recognizedText
+    ShadowingResult:
+      type: object
+      properties:
+        score:
+          type: integer
+          minimum: 0
+          maximum: 100
+        similarity: *id015
+        wrongParts:
+          type: array
+          items: *id008
+    PublicProfile:
+      type: object
+      properties:
+        userId: *id007
+        nickname: *id008
+        rankPoints: *id006
+        badges:
+          type: array
+          items:
+            $ref: '#/components/schemas/Badge'
+        relation:
+          type: string
+          enum:
+          - None
+          - Friend
+          - RequestSent
+          - RequestReceived
+      description: Không chứa email hay tên thật (NFR-008.1)
+    SocialSettings:
+      type: object
+      properties:
+        allowFriendRequests:
+          type: string
+          enum:
+          - Everyone
+          - Nobody
+        allowMessagesFrom:
+          type: string
+          enum:
+          - Friends
+          - Nobody
+        allowGameInvites:
+          type: string
+          enum:
+          - Friends
+          - Nobody
+        socialTermsAcceptedAt: *id016
+    AcceptTermsRequest:
+      type: object
+      properties:
+        version: *id008
+      required:
+      - version
+    FriendRequestCreate:
+      type: object
+      properties:
+        userId: *id007
+        friendCode: *id008
+        nickname: *id008
+      description: Cung cấp một trong ba trường
+    FriendRequestView:
+      type: object
+      properties:
+        id: *id007
+        direction:
+          type: string
+          enum:
+          - Incoming
+          - Outgoing
+        user:
+          $ref: '#/components/schemas/PublicProfile'
+        status:
+          type: string
+          enum:
+          - Pending
+          - Accepted
+          - Declined
+          - Cancelled
+          - Expired
+        createdAt: *id016
+        expiresAt: *id016
+    FriendView:
+      type: object
+      properties:
+        user:
+          $ref: '#/components/schemas/PublicProfile'
+        since: *id016
+        unreadCount: *id006
+        lastMessageAt: *id016
+    PagedFriends:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/FriendView'
+        page: *id006
+        pageSize: *id006
+        totalItems: *id006
+        totalPages: *id006
+      required:
+      - items
+      - page
+      - pageSize
+      - totalItems
+      - totalPages
+    BlockedUser:
+      type: object
+      properties:
+        userId: *id007
+        nickname: *id008
+        blockedAt: *id016
+    ConversationView:
+      type: object
+      properties:
+        friend:
+          $ref: '#/components/schemas/PublicProfile'
+        lastMessageAt: *id016
+        unreadCount: *id006
+        canSend: *id013
+    MessageView:
       type: object
       properties:
         id:
-          type: string
-          format: uuid
-        title:
-          type: string
-          example: "Đặt đồ ăn tại quán Izakaya"
-        roleplayContext:
-          type: string
-          example: "Bạn là khách hàng, AI đóng vai bồi bàn Nhật Bản."
-        suggestedKanjiIds:
+          type: integer
+          format: int64
+        senderId: *id007
+        isMine: *id013
+        body: *id008
+        createdAt: *id016
+        deleted: *id013
+    MessagePage:
+      type: object
+      properties:
+        items:
           type: array
           items:
-            type: string
-            format: uuid
-
-    ChatMessageRequest:
-      type: object
-      required:
-        - message
-      properties:
-        scenarioId:
-          type: string
-          format: uuid
+            $ref: '#/components/schemas/MessageView'
+        nextBeforeId:
+          type: integer
+          format: int64
           nullable: true
-          description: Để trống nếu là Chat Freestyle (Giao tiếp tự do)
-        message:
-          type: string
-          example: "すみません、メニューをお願いします。"
-
-    ChatMessageResponse:
+    SendMessageRequest:
       type: object
       properties:
-        replyMessage:
+        clientMessageId: *id007
+        body:
           type: string
-          example: "はい、どうぞ！こちらがメニューになります。"
-        detectedKanjiList:
+          minLength: 1
+          maxLength: 500
+      required:
+      - clientMessageId
+      - body
+    MarkReadRequest:
+      type: object
+      properties:
+        lastReadMessageId:
+          type: integer
+          format: int64
+      required:
+      - lastReadMessageId
+    CreateInvitationRequest:
+      type: object
+      properties:
+        toUserId: *id007
+        gameCode: *id008
+        level: *id006
+      required:
+      - toUserId
+      - gameCode
+      - level
+    InvitationView:
+      type: object
+      properties:
+        id: *id007
+        direction:
+          type: string
+          enum:
+          - Incoming
+          - Outgoing
+        inviteType:
+          type: string
+          enum:
+          - Match
+          - Room
+        user:
+          $ref: '#/components/schemas/PublicProfile'
+        gameCode: *id008
+        level: *id006
+        status:
+          type: string
+          enum:
+          - Pending
+          - Accepted
+          - Declined
+          - Cancelled
+          - Expired
+        expiresAt: *id016
+        matchId: *id007
+        roomId: *id007
+    HeadToHead:
+      type: object
+      properties:
+        friend:
+          $ref: '#/components/schemas/PublicProfile'
+        gameCode: *id008
+        myWins: *id006
+        theirWins: *id006
+        draws: *id006
+    CreateRoomRequest:
+      type: object
+      properties:
+        gameCode:
+          type: string
+          enum:
+          - KANJI_CASE
+          - SHADOWING
+        level: *id006
+        caseId: *id006
+        maxPlayers:
+          type: integer
+          description: Vụ án 2..4, Shadowing 2..8
+        friendsOnly:
+          type: boolean
+          default: true
+      required:
+      - gameCode
+      - level
+      - maxPlayers
+    RoomPlayerView:
+      type: object
+      properties:
+        user:
+          $ref: '#/components/schemas/PublicProfile'
+        status:
+          type: string
+          enum:
+          - Invited
+          - Joined
+          - Left
+          - Finished
+        score: *id006
+        rankInRoom: *id006
+        isHost: *id013
+    RoomView:
+      type: object
+      properties:
+        id: *id007
+        code: *id008
+        gameCode: *id008
+        level: *id006
+        caseId: *id006
+        status:
+          type: string
+          enum:
+          - Lobby
+          - InProgress
+          - Completed
+          - Expired
+          - Cancelled
+        maxPlayers: *id006
+        friendsOnly: *id013
+        expiresAt: *id016
+        players:
           type: array
           items:
-            $ref: '#/components/schemas/KanjiCardDto'
-          description: Danh sách chữ Kanji xuất hiện trong câu trả lời để hỗ trợ học tập
+            $ref: '#/components/schemas/RoomPlayerView'
+    PagedRooms:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/RoomView'
+        page: *id006
+        pageSize: *id006
+        totalItems: *id006
+        totalPages: *id006
+      required:
+      - items
+      - page
+      - pageSize
+      - totalItems
+      - totalPages
+    JoinRoomRequest:
+      type: object
+      properties:
+        code: *id008
+      required:
+      - code
+    InviteToRoomRequest:
+      type: object
+      properties:
+        userId: *id007
+      required:
+      - userId
+    RoomCaseChapter:
+      type: object
+      properties:
+        chapterId: *id006
+        chapterNo: *id006
+        storyText: *id008
+        puzzleType: *id008
+        solved: *id013
+        solvedByNickname: *id008
+        unlocked: *id013
+    RoomCaseState:
+      type: object
+      properties:
+        roomId: *id007
+        chapters:
+          type: array
+          items:
+            $ref: '#/components/schemas/RoomCaseChapter'
+        hintsUsedCurrentChapter: *id006
+        maxHints: *id006
+        completed: *id013
+        stars: *id006
+    RoomShadowingState:
+      type: object
+      properties:
+        roomId: *id007
+        clips:
+          type: array
+          items:
+            $ref: '#/components/schemas/ShadowingClip'
+        submittedClipIds:
+          type: array
+          items: *id006
+        deadline: *id016
+    RoomResult:
+      type: object
+      properties:
+        roomId: *id007
+        status: *id008
+        ranking:
+          type: array
+          items:
+            type: object
+            properties:
+              rank: *id006
+              nickname: *id008
+              score: *id006
+              contribution: *id006
+        stars: *id006
+        totalTimeMs: *id006
+    QuickMessage:
+      type: object
+      properties:
+        code: *id008
+        text: *id008
+    SendQuickMessageRequest:
+      type: object
+      properties:
+        code: *id008
+      required:
+      - code
+    RoomQuickMessage:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        nickname: *id008
+        code: *id008
+        text: *id008
+        createdAt: *id016
+    NotificationView:
+      type: object
+      properties:
+        id: *id007
+        type: &id017
+          type: string
+          enum:
+          - FriendRequest
+          - FriendAccepted
+          - GameInvitation
+          - RoomInvitation
+          - NewMessage
+          - MatchResult
+          - RoomResult
+        payload:
+          type: object
+          additionalProperties: true
+          description: Không chứa nội dung tin nhắn đầy đủ
+        createdAt: *id016
+        readAt: *id016
+    PagedNotifications:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/NotificationView'
+        page: *id006
+        pageSize: *id006
+        totalItems: *id006
+        totalPages: *id006
+      required:
+      - items
+      - page
+      - pageSize
+      - totalItems
+      - totalPages
+    UnreadCount:
+      type: object
+      properties:
+        notifications: *id006
+        messages: *id006
+        invitations: *id006
+    NotificationSettingItem:
+      type: object
+      properties:
+        type: *id017
+        isEnabled: *id013
+    NotificationSettings:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/NotificationSettingItem'
+    RegisterDeviceRequest:
+      type: object
+      properties:
+        token: *id008
+        platform:
+          type: string
+          default: Android
+      required:
+      - token
+    CreateReportRequest:
+      type: object
+      properties:
+        targetUserId: *id007
+        messageId:
+          type: integer
+          format: int64
+        matchId: *id007
+        reason:
+          type: string
+          enum:
+          - Spam
+          - Harassment
+          - Inappropriate
+          - Cheating
+          - Other
+        details:
+          type: string
+          maxLength: 1000
+      required:
+      - targetUserId
+      - reason
+    ReportReceipt:
+      type: object
+      properties:
+        id: *id006
+        status: *id008
+ 
