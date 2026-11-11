@@ -1,0 +1,29 @@
+[
+  {
+    "id": "KANJIDIC2",
+    "name": "KANJIDIC2 Database",
+    "usage": "kanji-core",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://www.edrdg.org/edrdg/licence.html",
+    "attributionText": "Dữ liệu cấu trúc Kanji thuộc bản quyền của KANJIDIC2 / EDRDG (Electronic Dictionary Research and Development Group).",
+    "licenseCheckedAt": "2026-11-11"
+  },
+  {
+    "id": "JLPT_COMMUNITY_MAP",
+    "name": "JLPT Kanji Level Mapping Community List",
+    "usage": "jlpt-mapping",
+    "license": "CC BY 4.0",
+    "licenseUrl": "http://www.kanjimaster.com/license",
+    "attributionText": "Danh sách ánh xạ cấp độ N5-N1 dựa trên tổng hợp dữ liệu cộng đồng JLPT bởi Jonathan Waller.",
+    "licenseCheckedAt": "2026-11-11"
+  },
+  {
+    "id": "RENMEI_CURATED",
+    "name": "Renmei Internal Curated Kanji",
+    "usage": "curated-meanings",
+    "license": "Proprietary / Internal",
+    "licenseUrl": "https://renmei.app/terms",
+    "attributionText": "Dữ liệu Hán Việt, nghĩa tiếng Việt độc quyền biên soạn bởi dự án Renmei.",
+    "licenseCheckedAt": "2026-11-11"
+  }
+]
