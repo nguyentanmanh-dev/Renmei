@@ -1,0 +1,82 @@
+﻿kanji;jlpt_level;han_viet;onyomi;kunyomi;meanings_vi;examples;mnemonic_vi;source_id;source_ref;review_passed
+一;5;nhất;"イチ; イツ";"ひと; ひと.つ";"một; duy nhất";"一つ (ひとつ) - một cái; 一月 (いちがつ) - tháng Một";Một nét gạch ngang đơn giản biểu thị số một.;KANJIDIC2;KANJIDIC2-4E00;TRUE
+二;5;nhị;"ニ; ジ";"ふた; ふた.つ";hai;"二つ (ふたつ) - hai cái; 二人 (ふたり) - hai người";Hai nét gạch ngang song song biểu thị số hai.;KANJIDIC2;KANJIDIC2-4E8C;TRUE
+三;5;tam;"サン; ゾウ";"み; み.つ; みっ.つ";ba;"三つ (みっつ) - ba cái; 三月 (さんがつ) - tháng Ba";Ba nét gạch ngang xếp chồng lên nhau biểu thị số ba.;KANJIDIC2;KANJIDIC2-4E09;TRUE
+四;5;tứ;シ;"よ; よ.つ; よっ.つ; よん";bốn;"四つ (よっつ) - bốn cái; 四月 (しがつ) - tháng Tư";Hình khung cửa sổ chia làm bốn góc bên trong.;KANJIDIC2;KANJIDIC2-56DB;TRUE
+五;5;ngũ;ゴ;"いつ; いつ.つ";năm (số 5);"五つ (いつつ) - năm cái; 五月 (ごがつ) - tháng Năm";Hình khung chữ thập đan chéo biểu thị số năm.;KANJIDIC2;KANJIDIC2-4E94;TRUE
+六;5;lục;"ロク; リク";"む; む.つ; むっ.つ; むい";sáu;"六つ (むっつ) - sáu cái; 六月 (ろくがつ) - tháng Sáu";Mái nhà có ống khói bên trên và hai chân bên dưới.;KANJIDIC2;KANJIDIC2-516D;TRUE
+七;5;thất;シチ;"なな; なな.つ; なの";bảy;"七つ (ななつ) - bảy cái; 七月 (しちがつ) - tháng Bảy";Số 7 viết ngược nét móc lên biểu thị số bảy.;KANJIDIC2;KANJIDIC2-4E03;TRUE
+八;5;bát;ハチ;"や; や.つ; やっ.つ; よう";tám;"八つ (やっつ) - tám cái; 八月 (はちがつ) - tháng Tám";Hai nét phẩy mở rộng ra hai bên như hình chữ bát.;KANJIDIC2;KANJIDIC2-516B;TRUE
+九;5;cửu;"キュウ; ク";"ここの; ここの.つ";chín;"九つ (ここのつ) - chín cái; 九月 (くがつ) - tháng Chín";Hình cánh tay gập khuỷu vươn ra biểu thị số chín.;KANJIDIC2;KANJIDIC2-4E5D;TRUE
+十;5;thập;"ジュウ; ジッ; ジュッ";"とお; と";mười;"十 (じゅう) - mười; 十月 (じゅうがつ) - tháng Mười";Hai nét ngang dọc giao nhau thành dấu cộng biểu thị số mười.;KANJIDIC2;KANJIDIC2-5341;TRUE
+百;5;"bách; bá";"ヒャク; ビャク";もも;một trăm;"百円 (ひゃくえん) - 100 yên; 三百 (さんびゃく) - 300";Một (一) vạch trên chữ Bạch (白) chỉ số một trăm.;KANJIDIC2;KANJIDIC2-767E;TRUE
+千;5;thiên;セン;ち;một nghìn;"千円 (せんえん) - 1000 yên; 三千 (さんぜん) - 3000";Nét phẩy ngắn trên chữ Thập (十) biến mười thành một nghìn.;KANJIDIC2;KANJIDIC2-5343;TRUE
+万;5;vạn;"マン; バン";よろず;"mười nghìn; vạn";"一万 (いちまん) - một vạn; 万年筆 (まんねんひつ) - bút máy";Nét gạch ngang trên chữ Lực cách điệu chỉ con số hàng vạn.;KANJIDIC2;KANJIDIC2-4E07;TRUE
+円;5;viên;エン;まる.い;"đồng Yên; hình tròn";"百円 (ひゃくえん) - 100 yên; 円い (まるい) - tròn trịa";Khung hình đồng tiền tròn đặc trưng của Nhật Bản.;KANJIDIC2;KANJIDIC2-5186;TRUE
+日;5;nhật;"ニチ; ジツ";"ひ; -び; -か";"ngày; mặt trời; Nhật Bản";"日本 (にほん) - Nhật Bản; 毎日 (まいにち) - mỗi ngày";Khung cửa sổ đón ánh nắng mặt trời mỗi ngày.;KANJIDIC2;KANJIDIC2-65E5;TRUE
+月;5;nguyệt;"ゲツ; ガツ";つき;"mặt trăng; tháng";"月曜日 (げつようび) - thứ Hai; 一月 (いちがつ) - tháng Một";Vầng trăng khuyết có hai vệt mây ngang qua.;KANJIDIC2;KANJIDIC2-6708;TRUE
+火;5;hỏa;カ;"ひ; -び; ほ-";"lửa; thứ Ba";"火曜日 (かようび) - thứ Ba; 火事 (かじ) - hỏa hoạn";Ngọn lửa bùng cháy với hai tia lửa bắn sang hai bên.;KANJIDIC2;KANJIDIC2-706B;TRUE
+水;5;thủy;スイ;"みず; みず-";"nước; thứ Tư";"水曜日 (すいようび) - thứ Tư; お水 (おみず) - nước uống";Dòng suối chảy ở giữa cùng các giọt nước bắn tung tóe.;KANJIDIC2;KANJIDIC2-6C34;TRUE
+木;5;mộc;"ボク; モク";"き; こ-";"cây; gỗ; thứ Năm";"木曜日 (もくようび) - thứ Năm; 木 (き) - cái cây";Thân cây thẳng đứng có cành xòe và rễ cắm xuống đất.;KANJIDIC2;KANJIDIC2-6728;TRUE
+金;5;kim;"キン; コン; ゴン";"かね; かな-; -がね";"tiền; vàng; kim loại";"金曜日 (きんようび) - thứ Sáu; お金 (おかね) - tiền bạc";Mái nhà (人) che chở cho những thỏi vàng lấp lánh bên dưới.;KANJIDIC2;KANJIDIC2-91D1;TRUE
+土;5;thổ;"ド; ト";つち;"đất; thứ Bảy";"土曜日 (どようび) - thứ Bảy; 土地 (とち) - đất đai";Cây thập giá cắm chặt trên mặt đất phẳng.;KANJIDIC2;KANJIDIC2-571F;TRUE
+曜;5;diệu;ヨウ;;ngày trong tuần;"何曜日 (なんようび) - thứ mấy; 日曜日 (にちようび) - Chủ nhật";Mặt trời (日) và đôi cánh chim (羽) bay qua từng ngày trong tuần.;KANJIDIC2;KANJIDIC2-66DC;TRUE
+本;5;"bản; bổn";ホン;もと;"sách; gốc; Nhật Bản";"日本 (にほん) - Nhật Bản; 本 (ほん) - quyển sách";Gạch ngang đánh dấu phần gốc rễ dưới thân cây (木).;KANJIDIC2;KANJIDIC2-672C;TRUE
+人;5;nhân;"ジン; ニン";"ひと; -り; -と";người;"日本人 (にほんじん) - người Nhật; 三人 (さんにん) - ba người";Dáng người đang bước đi bằng hai chân vững chãi.;KANJIDIC2;KANJIDIC2-4EBA;TRUE
+今;5;kim;"コン; キン";いま;"bây giờ; hiện tại";"今 (いま) - bây giờ; 今日 (きょう) - hôm nay";Mái nhà che chở khoảnh khắc hiện tại ngay dưới mái hiên.;KANJIDIC2;KANJIDIC2-4ECA;TRUE
+寺;5;tự;ジ;てら;ngôi chùa;"お寺 (おてら) - ngôi chùa; 寺院 (じいん) - tự viện";Nền đất (土) nâng đỡ các thốn (寸) quy củ của ngôi chùa.;KANJIDIC2;KANJIDIC2-5BFA;TRUE
+時;5;"thời; thì";ジ;"とき; -どき";"thời gian; giờ";"時間 (じかん) - thời gian; 一時 (いちじ) - 1 giờ";Mặt trời (日) di chuyển trên mái chùa (寺) báo hiệu giờ giấc.;KANJIDIC2;KANJIDIC2-6642;TRUE
+半;5;bán;ハン;なか.ば;"một nửa; rưỡi";"半分 (はんぶん) - một nửa; 一時半 (いちじはん) - 1 giờ rưỡi";Đường thẳng dọc chia đôi hai phần cân xứng bằng nhau.;KANJIDIC2;KANJIDIC2-534A;TRUE
+刀;5;đao;トウ;"かたな; そり";"thanh kiếm; con dao";"刀 (かたな) - kiếm Nhật; 小刀 (こがたな) - dao nhỏ";Hình lưỡi đao cong sắc bén có chuôi cầm.;KANJIDIC2;KANJIDIC2-5200;TRUE
+分;5;"phân; phận";"ブン; フン; ブ";"わ.ける; わ.かれる; わ.かる";"phút; phần; hiểu";"五分 (ごふん) - 5 phút; 分かる (わかる) - hiểu";Dùng thanh đao (刀) chia tách vật làm hai phần (八).;KANJIDIC2;KANJIDIC2-5206;TRUE
+力;5;lực;"リョク; リキ; リイ";ちから;"sức mạnh; năng lực";"力 (ちから) - sức lực; 努力 (どりょく) - nỗ lực";Hình cánh tay gồng cơ bắp đầy sức mạnh.;KANJIDIC2;KANJIDIC2-529B;TRUE
+男;5;nam;"ダン; ナン";"おとこ; お";"đàn ông; con trai";"男の子 (おとこのこ) - bé trai; 男性 (だんせい) - nam giới";Người dùng sức lực (力) cày cấy trên ruộng đồng (田) là đàn ông.;KANJIDIC2;KANJIDIC2-7537;TRUE
+女;5;nữ;"ジョ; ニョ; ニョウ";"おんな; め";"phụ nữ; con gái";"女の子 (おんなのこ) - bé gái; 女性 (じょせい) - nữ giới";Dáng người phụ nữ ngồi quỳ duyên dáng, uyển chuyển.;KANJIDIC2;KANJIDIC2-5973;TRUE
+子;5;"tử; tý";"シ; ス; ツ";"こ; -こ";"đứa trẻ; con cái";"子ども (こども) - trẻ em; 女子 (じょし) - nữ sinh";Hình em bé quấn tã giơ hai tay sang hai bên.;KANJIDIC2;KANJIDIC2-5B50;TRUE
+学;5;học;ガク;まな.ぶ;"học; việc học";"学生 (がくせい) - học sinh; 学校 (がっこう) - trường học";Đứa trẻ (子) ngồi dưới mái nhà (冖) chăm chỉ tiếp thu kiến thức.;KANJIDIC2;KANJIDIC2-5B66;TRUE
+生;5;"sinh; sanh";"セイ; ショウ";"い.きる; う.まれる; なま";"sống; sinh ra; tươi sống";"先生 (せんせい) - giáo viên; 学生 (がくせい) - học sinh";Mầm cây non nhú lên khỏi mặt đất tượng trưng cho sự sống.;KANJIDIC2;KANJIDIC2-751F;TRUE
+先;5;tiên;セン;"さき; ま.ず";"trước; phía trước";"先生 (せんせい) - giáo viên; 先月 (せんげつ) - tháng trước";Bước chân đi trước dẫn đường cho người phía sau.;KANJIDIC2;KANJIDIC2-5148;TRUE
+何;5;hà;カ;"なに; なん";"cái gì; bao nhiêu";"何 (なに) - cái gì; 何時 (なんじ) - mấy giờ";Người (亻) mang vác hành lý trên vai tự hỏi mang gì.;KANJIDIC2;KANJIDIC2-4F55;TRUE
+父;5;phụ;フ;ちち;"cha; bố";"父 (ちち) - bố tôi; お父さん (おとうさん) - bố (người khác)";Đôi tay người cha cầm rìu lao động gánh vác gia đình.;KANJIDIC2;KANJIDIC2-7236;TRUE
+母;5;mẫu;ボ;"はは; も";mẹ;"母 (はは) - mẹ tôi; お母さん (おかあさん) - mẹ (người khác)";Hình dáng người mẹ ôm con cho bú đầy yêu thương.;KANJIDIC2;KANJIDIC2-6BCD;TRUE
+年;5;niên;ネン;とし;"năm; tuổi";"今年 (ことし) - năm nay; 一年 (いちねん) - một năm";Mùa gặt lúa chín mỗi năm một lần của người nông dân.;KANJIDIC2;KANJIDIC2-5E74;TRUE
+去;5;khứ;"キョ; コ";"さ.る; -さ.る";"quá khứ; rời đi";"去年 (きょねん) - năm ngoái; 過去 (かこ) - quá khứ";Người rời khỏi mặt đất (土) đi về phía quá khứ.;KANJIDIC2;KANJIDIC2-53BB;TRUE
+毎;5;mỗi;マイ;"ごと; -ごと.に";"mỗi; hằng";"毎日 (まいにち) - mỗi ngày; 毎週 (まいしゅう) - mỗi tuần";Người mẹ (母) ngày nào cũng đội nón chăm lo gia đình.;KANJIDIC2;KANJIDIC2-6BCE;TRUE
+王;5;vương;オウ;;nhà vua;"王様 (おうさま) - đức vua; 王国 (おうこく) - vương quốc";Đường thẳng dọc nối liền ba tầng Trời - Người - Đất chính là Vua.;KANJIDIC2;KANJIDIC2-738B;TRUE
+国;5;quốc;コク;くに;"đất nước; quốc gia";"外国 (がいこく) - nước ngoài; 中国 (ちゅうごく) - Trung Quốc";Bức tường biên giới (囗) bảo vệ viên ngọc quý (玉) của quốc gia.;KANJIDIC2;KANJIDIC2-56FD;TRUE
+見;5;"kiến; hiện";ケン;"み.る; み.える; み.せる";"nhìn; xem; trông thấy";"見る (みる) - nhìn/xem; 見せる (みせる) - cho xem";Con mắt (目) to đặt trên đôi chân đi khắp nơi quan sát.;KANJIDIC2;KANJIDIC2-898B;TRUE
+行;5;"hành; hàng; hạnh";"コウ; ギョウ; アン";"い.く; ゆ.く; おこな.う";"đi; tổ chức; hàng lối";"行く (いく) - đi; 銀行 (ぎんこう) - ngân hàng";Hình ngã tư đường phố nơi mọi người qua lại.;KANJIDIC2;KANJIDIC2-884C;TRUE
+米;5;mễ;"ベイ; マイ; メエトル";"こめ; よね";"gạo; nước Mỹ";"お米 (おこめ) - hạt gạo; 米国 (べいこく) - nước Mỹ";Hạt lúa tách vỏ tỏa ra bốn hướng trắng ngần.;KANJIDIC2;KANJIDIC2-7C73;TRUE
+来;5;lai;"ライ; タイ";"く.る; きた.る; きた.す";"đến; tới; tương lai";"来る (くる) - đến; 来週 (らいしゅう) - tuần sau";Cây lúa trĩu bông mang lại mùa màng sắp tới.;KANJIDIC2;KANJIDIC2-6765;TRUE
+良;5;lương;リョウ;"よ.い; -よ.い; い.い";"tốt; giỏi";"良い (よい) - tốt; 仲良し (なかよし) - bạn thân";Hạt gạo ngon được sàng lọc kỹ lưỡng chất lượng tốt.;KANJIDIC2;KANJIDIC2-826F;TRUE
+食;5;"thực; tự";"ショク; ジキ";"く.う; た.べる; は.む";"ăn; thực phẩm";"食べる (たべる) - ăn; 食事 (しょくじ) - bữa ăn";Mái nhà (人) che trên bát cơm ngon (良) mời mọi người ăn.;KANJIDIC2;KANJIDIC2-98DF;TRUE
+飲;5;ẩm;"イン; オン";"の.む; -の.み";uống;"飲む (のむ) - uống; 飲み物 (のみもの) - đồ uống";Người há miệng (欠) thưởng thức đồ ăn thức uống (食).;KANJIDIC2;KANJIDIC2-98F2;TRUE
+会;5;hội;"カイ; エ";"あ.う; あ.わせる";"gặp gỡ; hội họp";"会う (あう) - gặp gỡ; 会社 (かいしゃ) - công ty";Mọi người tụ họp trò chuyện dưới một mái nhà chung.;KANJIDIC2;KANJIDIC2-4F1A;TRUE
+耳;5;nhĩ;ジ;みみ;cái tai;"耳 (みみ) - cái tai; 耳鼻科 (じびか) - khoa tai mũi họng";Hình vành tai người nhìn nghiêng rõ ràng.;KANJIDIC2;KANJIDIC2-8033;TRUE
+聞;5;văn;"ブン; モン";"き.く; き.こえる";"nghe; hỏi";"聞く (きく) - nghe/hỏi; 新聞 (しんぶん) - báo chí";Ghé tai (耳) vào khe cửa (門) để lắng nghe tin tức.;KANJIDIC2;KANJIDIC2-805E;TRUE
+言;5;ngôn;"ゲン; ゴン";"い.う; こと";"nói; lời nói";"言う (いう) - nói; 言葉 (ことば) - từ ngữ";Sóng âm thanh phát ra từ cái miệng (口) tạo thành lời nói.;KANJIDIC2;KANJIDIC2-8A00;TRUE
+話;5;thoại;ワ;"はな.す; はなし";"nói chuyện; câu chuyện";"話す (はなす) - nói chuyện; 電話 (でんわ) - điện thoại";Lời nói (言) phát ra từ đầu lưỡi (舌) khi trò chuyện.;KANJIDIC2;KANJIDIC2-8A71;TRUE
+立;5;lập;"リツ; リュウ; リットル";"た.つ; -た.つ; た.てる";"đứng; thiết lập";"立つ (たつ) - đứng lên; 立派 (りっぱ) - tráng lệ";Người dang hai tay đứng vững trên mặt đất.;KANJIDIC2;KANJIDIC2-7ACB;TRUE
+待;5;đãi;タイ;"ま.つ; -ま.ち";chờ đợi;"待つ (まつ) - chờ đợi; 招待 (しょうたい) - lời mời";Bước chân (彳) dừng lại trước cổng chùa (寺) để chờ đợi.;KANJIDIC2;KANJIDIC2-5F85;TRUE
+周;5;chu;シュウ;まわ.り;"chu vi; xung quanh";"周り (まわり) - xung quanh; 周囲 (しゅうい) - chu vi";Khu vực được bao bọc khép kín xung quanh.;KANJIDIC2;KANJIDIC2-5468;TRUE
+週;5;chu;シュウ;;tuần lễ;"今週 (こんしゅう) - tuần này; 週末 (しゅうまつ) - cuối tuần";Vòng quay khép kín (周) di chuyển (辶) hết 7 ngày thành một tuần.;KANJIDIC2;KANJIDIC2-9031;TRUE
+大;5;"đại; thái";"ダイ; タイ";"おお-; おお.きい";"to; lớn";"大きい (おおきい) - to lớn; 大学 (だいがく) - đại học";Người dang rộng cả hai tay hai chân tỏ vẻ to lớn.;KANJIDIC2;KANJIDIC2-5927;TRUE
+小;5;tiểu;ショウ;"ちい.さい; こ-; お-";"nhỏ; bé";"小さい (ちいさい) - nhỏ bé; 小学校 (しょうがっこう) - trường tiểu học";Vật thể bị chia nhỏ thành ba mảnh li ti.;KANJIDIC2;KANJIDIC2-5C0F;TRUE
+高;5;cao;コウ;"たか.い; たか; -だか";"cao; đắt";"高い (たかい) - cao/đắt; 高校 (こうこう) - trường cấp 3";Tòa tháp vọng lâu nhiều tầng xây vút lên cao.;KANJIDIC2;KANJIDIC2-9AD8;TRUE
+安;5;an;アン;"やす.い; やす.まる";"rẻ; bình an";"安い (やすい) - rẻ; 安心 (あんしん) - an tâm";Người phụ nữ (女) ở trong mái nhà (宀) cảm thấy bình an.;KANJIDIC2;KANJIDIC2-5B89;TRUE
+新;5;tân;シン;"あたら.しい; あら.た; にい-";mới;"新しい (あたらしい) - mới; 新聞 (しんぶん) - báo mới";Dùng rìu (斤) đốn cây (木) đứng (立) lấy gỗ mới tinh.;KANJIDIC2;KANJIDIC2-65B0;TRUE
+古;5;cổ;コ;"ふる.い; ふる-; -ふる.す";"cũ; cổ xưa";"古い (ふるい) - cũ kỹ; 中古 (ちゅうこ) - đồ cũ";Câu chuyện truyền miệng (口) qua mười (十) thế hệ đã cổ xưa.;KANJIDIC2;KANJIDIC2-53E4;TRUE
+元;5;nguyên;"ゲン; ガn";もと;"gốc; khỏe mạnh";"元気 (げんき) - khỏe mạnh; 元日 (がんじつ) - ngày đầu năm";Hai chân vững chắc nâng đỡ phần đầu tạo nên khởi nguyên.;KANJIDIC2;KANJIDIC2-5143;TRUE
+気;5;khí;"キ; ケ";いき;"khí chất; tinh thần";"元気 (げんき) - khỏe mạnh; 天気 (てんき) - thời tiết";Hơi nước bốc lên từ nồi cơm đang sôi tỏa đầy sinh khí.;KANJIDIC2;KANJIDIC2-6C17;TRUE
+多;5;đa;タ;"おお.い; まさ.に";nhiều;"多い (おおい) - nhiều; 多分 (たぶん) - có lẽ";Hai vầng trăng khuyết (夕) xếp chồng lên nhau biểu thị số nhiều.;KANJIDIC2;KANJIDIC2-591A;TRUE
+少;5;"thiểu; thiếu";ショウ;"すく.ない; すこ.し";"ít; một chút";"少ない (すくない) - ít; 少し (すこし) - một chút";Cái nhỏ (小) lại bị vạt mất một nét phẩy nên càng ít hơn.;KANJIDIC2;KANJIDIC2-5C11;TRUE
+広;5;quảng;コウ;"ひろ.い; ひろ.まる";"rộng; rộng rãi";"広い (ひろい) - rộng rãi; 広場 (ひろば) - quảng trường";Mái đình lớn (广) mở rộng không gian thoáng đãng bên trong.;KANJIDIC2;KANJIDIC2-5E83;TRUE
+早;5;tảo;"ソウ; サッ";"はや.い; はや; はや-";"sớm; nhanh";"早い (はやい) - sớm; 早朝 (そうちょう) - sáng sớm";Mặt trời (日) vừa nhú lên trên ngọn cỏ (十) vào buổi sáng sớm.;KANJIDIC2;KANJIDIC2-65E9;TRUE
+長;5;"trường; trưởng";チョウ;"なが.い; おさ";"dài; trưởng (nhóm/lớp)";"長い (ながい) - dài; 社長 (しゃちょう) - giám đốc";Mái tóc dài thướt tha của bậc trưởng lão uy nghiêm.;KANJIDIC2;KANJIDIC2-9577;TRUE
+明;5;minh;"メイ; ミョウ; ミン";"あ.かり; あか.るい";"sáng; rõ ràng";"明るい (あかるい) - sáng sủa; 明日 (あした) - ngày mai";Mặt trời (日) và mặt trăng (月) cùng chiếu sáng rực rỡ.;KANJIDIC2;KANJIDIC2-660E;TRUE
+好;5;"hảo; hiếu";コウ;"この.む; す.く; よ.い";"thích; tốt đẹp";"好き (すき) - thích; 大好き (だいすき) - rất thích";Người mẹ (女) ôm đứa con (子) thể hiện tình yêu thương yêu thích.;KANJIDIC2;KANJIDIC2-597D;TRUE
+友;5;hữu;ユウ;とも;bạn bè;"友達 (ともだち) - bạn bè; 親友 (しんゆう) - bạn thân";Hai bàn tay nắm chặt lấy nhau gắn kết tình bạn bè.;KANJIDIC2;KANJIDIC2-53CB;TRUE
+入;5;nhập;"ニュウ; ジュ";"い.る; い.れる; はい.る";"vào; cho vào";"入る (はいる) - đi vào; 入口 (いりぐち) - lối vào";Mũi tên hướng đầu nhọn chui vào bên trong.;KANJIDIC2;KANJIDIC2-5165;TRUE
+出;5;xuất;"シュツ; スイ";"で.る; だ.す";"ra; đi ra; đưa ra";"出る (でる) - đi ra; 出口 (でぐち) - lối ra";Hai ngọn núi nhô cao vươn ra khỏi mặt đất.;KANJIDIC2;KANJIDIC2-51FA;TRUE
+駅;5;dịch;エキ;;nhà ga;"駅 (えき) - nhà ga; 東京駅 (とうきょうえき) - ga Tokyo";Con ngựa (馬) dừng chân tại trạm dịch (尺) thời xưa, nay là nhà ga.;KANJIDIC2;KANJIDIC2-99C5;TRUE
+;;;;;;;;;;
