@@ -1,0 +1,81 @@
+﻿kanji;source_a;source_b;source_c;result;chosen;reviewer;notes
+一;nhất;nhất;;Match;nhất;Nguyễn Tấn Mạnh;"Source A: KANJIDIC2; Source B: Thiều Chửu"
+二;nhị;nhị;;Match;nhị;Nguyễn Tấn Mạnh;"Source A: KANJIDIC2; Source B: Thiều Chửu"
+三;tam;tam;;Match;tam;Nguyễn Tấn Mạnh;"Source A: KANJIDIC2; Source B: Thiều Chửu"
+四;tứ;tứ;;Match;tứ;Nguyễn Tấn Mạnh;"Source A: KANJIDIC2; Source B: Thiều Chửu"
+五;ngũ;ngũ;;Match;ngũ;Nguyễn Tấn Mạnh;"Source A: KANJIDIC2; Source B: Thiều Chửu"
+六;lục;lục;;Match;lục;Nguyễn Tấn Mạnh;"Source A: KANJIDIC2; Source B: Thiều Chửu"
+七;thất;thất;;Match;thất;Nguyễn Tấn Mạnh;"Source A: KANJIDIC2; Source B: Thiều Chửu"
+八;bát;bát;;Match;bát;Nguyễn Tấn Mạnh;"Source A: KANJIDIC2; Source B: Thiều Chửu"
+九;cửu;cửu;;Match;cửu;Nguyễn Tấn Mạnh;"Source A: KANJIDIC2; Source B: Thiều Chửu"
+十;thập;thập;;Match;thập;Nguyễn Tấn Mạnh;"Source A: KANJIDIC2; Source B: Thiều Chửu"
+百;bách;"bách; bá";;Variant;"bách; bá";Nguyễn Tấn Mạnh;Gộp thêm âm bá từ Source B
+千;thiên;thiên;;Match;thiên;Nguyễn Tấn Mạnh;"Source A: KANJIDIC2; Source B: Thiều Chửu"
+万;vạn;"vạn; mặc";;Variant;vạn;Nguyễn Tấn Mạnh;Âm mặc chỉ dùng trong họ kép, N5 dùng vạn
+円;viên;viên;;Match;viên;Nguyễn Tấn Mạnh;"Source A: KANJIDIC2; Source B: Trần Văn Chánh"
+日;nhật;nhật;;Match;nhật;Nguyễn Tấn Mạnh;"Source A: KANJIDIC2; Source B: Thiều Chửu"
+月;nguyệt;nguyệt;;Match;nguyệt;Nguyễn Tấn Mạnh;"Source A: KANJIDIC2; Source B: Thiều Chửu"
+火;hỏa;hỏa;;Match;hỏa;Nguyễn Tấn Mạnh;"Source A: KANJIDIC2; Source B: Thiều Chửu"
+水;thủy;thủy;;Match;thủy;Nguyễn Tấn Mạnh;"Source A: KANJIDIC2; Source B: Thiều Chửu"
+木;mộc;mộc;;Match;mộc;Nguyễn Tấn Mạnh;"Source A: KANJIDIC2; Source B: Thiều Chửu"
+金;kim;kim;;Match;kim;Nguyễn Tấn Mạnh;"Source A: KANJIDIC2; Source B: Thiều Chửu"
+土;thổ;thổ;;Match;thổ;Nguyễn Tấn Mạnh;"Source A: KANJIDIC2; Source B: Thiều Chửu"
+曜;diệu;diệu;;Match;diệu;Nguyễn Tấn Mạnh;"Source A: KANJIDIC2; Source B: Thiều Chửu"
+本;bản;"bản; bổn";;Variant;"bản; bổn";Nguyễn Tấn Mạnh;Biến âm vùng miền, giữ cả hai
+人;nhân;nhân;;Match;nhân;Nguyễn Tấn Mạnh;"Source A: KANJIDIC2; Source B: Thiều Chửu"
+今;kim;kim;;Match;kim;Nguyễn Tấn Mạnh;"Source A: KANJIDIC2; Source B: Thiều Chửu"
+寺;tự;"tự; thị";;Variant;tự;Nguyễn Tấn Mạnh;Âm thị dùng trong từ cổ, N5 dùng tự 
+時;thời;"thời; thì";;Variant;"thời; thì";Nguyễn Tấn Mạnh;Gộp biến âm thì từ Source B
+半;bán;bán;;Match;bán;Nguyễn Tấn Mạnh;"Source A: KANJIDIC2; Source B: Thiều Chửu"
+刀;đao;đao;;Match;đao;Nguyễn Tấn Mạnh;"Source A: KANJIDIC2; Source B: Thiều Chửu"
+分;phân;"phân; phận";;Variant;"phân; phận";Nguyễn Tấn Mạnh;Gộp âm phận từ Source B
+力;lực;lực;;Match;lực;Nguyễn Tấn Mạnh;"Source A: KANJIDIC2; Source B: Thiều Chửu"
+男;nam;nam;;Match;nam;Nguyễn Tấn Mạnh;"Source A: KANJIDIC2; Source B: Thiều Chửu"
+女;nữ;nữ;;Match;nữ;Nguyễn Tấn Mạnh;"Source A: KANJIDIC2; Source B: Thiều Chửu"
+子;tử;"tử; tý";;Variant;"tử; tý";Nguyễn Tấn Mạnh;Gộp âm tý từ Source B
+学;học;học;;Match;học;Nguyễn Tấn Mạnh;"Source A: KANJIDIC2; Source B: Trần Văn Chánh"
+生;sinh;"sinh; sanh";;Variant;"sinh; sanh";Nguyễn Tấn Mạnh;Biến âm vùng miền, giữ cả hai
+先;tiên;tiên;;Match;tiên;Nguyễn Tấn Mạnh;"Source A: KANJIDIC2; Source B: Thiều Chửu"
+何;hà;hà;;Match;hà;Nguyễn Tấn Mạnh;"Source A: KANJIDIC2; Source B: Thiều Chửu"
+父;phụ;phụ;;Match;phụ;Nguyễn Tấn Mạnh;"Source A: KANJIDIC2; Source B: Thiều Chửu"
+母;mẫu;mẫu;;Match;mẫu;Nguyễn Tấn Mạnh;"Source A: KANJIDIC2; Source B: Thiều Chửu"
+年;niên;niên;;Match;niên;Nguyễn Tấn Mạnh;"Source A: KANJIDIC2; Source B: Thiều Chửu"
+去;khứ;khứ;;Match;khứ;Nguyễn Tấn Mạnh;"Source A: KANJIDIC2; Source B: Thiều Chửu"
+毎;mỗi;mỗi;;Match;mỗi;Nguyễn Tấn Mạnh;"Source A: KANJIDIC2; Source B: Trần Văn Chánh"
+王;vương;"vương; vượng";;Variant;vương;Nguyễn Tấn Mạnh;Động từ vượng ít dùng ở N5, chốt vương
+国;quốc;quốc;;Match;quốc;Nguyễn Tấn Mạnh;"Source A: KANJIDIC2; Source B: Trần Văn Chánh"
+見;kiến;"kiến; hiện";;Variant;"kiến; hiện";Nguyễn Tấn Mạnh;Gộp âm hiện từ Source B
+行;hành;"hành; hàng; hạnh";;Variant;"hành; hàng; hạnh";Nguyễn Tấn Mạnh;Chữ đa âm thông dụng
+米;mễ;mễ;;Match;mễ;Nguyễn Tấn Mạnh;"Source A: KANJIDIC2; Source B: Thiều Chửu"
+来;lai;lai;;Match;lai;Nguyễn Tấn Mạnh;"Source A: KANJIDIC2; Source B: Trần Văn Chánh"
+良;lương;lương;;Match;lương;Nguyễn Tấn Mạnh;"Source A: KANJIDIC2; Source B: Thiều Chửu"
+食;thực;"thực; tự";;Variant;"thực; tự";Nguyễn Tấn Mạnh;Gộp âm tự  từ Source B
+飲;ẩm;ẩm;;Match;ẩm;Nguyễn Tấn Mạnh;"Source A: KANJIDIC2; Source B: Trần Văn Chánh"
+会;hội;"hội; cối";;Variant;hội;Nguyễn Tấn Mạnh;Âm cối chỉ dùng trong từ cổ, N5 dùng hội
+耳;nhĩ;nhĩ;;Match;nhĩ;Nguyễn Tấn Mạnh;"Source A: KANJIDIC2; Source B: Thiều Chửu"
+聞;văn;"văn; vấn";;Variant;văn;Nguyễn Tấn Mạnh;Động từ vấn ít dùng, N5 dùng văn
+言;ngôn;ngôn;;Match;ngôn;Nguyễn Tấn Mạnh;"Source A: KANJIDIC2; Source B: Thiều Chửu"
+話;thoại;thoại;;Match;thoại;Nguyễn Tấn Mạnh;"Source A: KANJIDIC2; Source B: Thiều Chửu"
+立;lập;lập;;Match;lập;Nguyễn Tấn Mạnh;"Source A: KANJIDIC2; Source B: Thiều Chửu"
+待;đãi;đãi;;Match;đãi;Nguyễn Tấn Mạnh;"Source A: KANJIDIC2; Source B: Thiều Chửu"
+周;chu;chu;;Match;chu;Nguyễn Tấn Mạnh;"Source A: KANJIDIC2; Source B: Thiều Chửu"
+週;chu;chu;;Match;chu;Nguyễn Tấn Mạnh;"Source A: KANJIDIC2; Source B: Thiều Chửu"
+大;đại;"đại; thái";;Variant;"đại; thái";Nguyễn Tấn Mạnh;Gộp âm thái từ Source B
+小;tiểu;tiểu;;Match;tiểu;Nguyễn Tấn Mạnh;"Source A: KANJIDIC2; Source B: Thiều Chửu"
+高;cao;cao;;Match;cao;Nguyễn Tấn Mạnh;"Source A: KANJIDIC2; Source B: Thiều Chửu"
+安;an;an;;Match;an;Nguyễn Tấn Mạnh;"Source A: KANJIDIC2; Source B: Thiều Chửu"
+新;tân;tân;;Match;tân;Nguyễn Tấn Mạnh;"Source A: KANJIDIC2; Source B: Thiều Chửu"
+古;cổ;cổ;;Match;cổ;Nguyễn Tấn Mạnh;"Source A: KANJIDIC2; Source B: Thiều Chửu"
+元;nguyên;nguyên;;Match;nguyên;Nguyễn Tấn Mạnh;"Source A: KANJIDIC2; Source B: Thiều Chửu"
+気;khí;khí;;Match;khí;Nguyễn Tấn Mạnh;"Source A: KANJIDIC2; Source B: Trần Văn Chánh"
+多;đa;đa;;Match;đa;Nguyễn Tấn Mạnh;"Source A: KANJIDIC2; Source B: Thiều Chửu"
+少;thiểu;"thiểu; thiếu";;Variant;"thiểu; thiếu";Nguyễn Tấn Mạnh;Gộp cả hai âm thiểu và thiếu
+広;quảng;quảng;;Match;quảng;Nguyễn Tấn Mạnh;"Source A: KANJIDIC2; Source B: Trần Văn Chánh"
+早;tảo;tảo;;Match;tảo;Nguyễn Tấn Mạnh;"Source A: KANJIDIC2; Source B: Thiều Chửu"
+長;trường;"trường; trưởng";;Variant;"trường; trưởng";Nguyễn Tấn Mạnh;Gộp đủ hai âm trường và trưởng
+明;minh;minh;;Match;minh;Nguyễn Tấn Mạnh;"Source A: KANJIDIC2; Source B: Thiều Chửu"
+好;hảo;"hảo; hiếu";;Variant;"hảo; hiếu";Nguyễn Tấn Mạnh;Gộp cả hai âm hảo và hiếu
+友;hữu;hữu;;Match;hữu;Nguyễn Tấn Mạnh;"Source A: KANJIDIC2; Source B: Thiều Chửu"
+入;nhập;nhập;;Match;nhập;Nguyễn Tấn Mạnh;"Source A: KANJIDIC2; Source B: Thiều Chửu"
+出;xuất;xuất;;Match;xuất;Nguyễn Tấn Mạnh;"Source A: KANJIDIC2; Source B: Thiều Chửu"
+駅;;dịch;dịch;Unknown;dịch;Nguyễn Tấn Mạnh;"KANJIDIC2 thiếu thẻ vietnam cho tân tự thể 駅; Source B và Source C xác nhận dịch"

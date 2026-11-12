@@ -1,6 +1,4 @@
 # <type>(<scope>): <mô tả ngắn bằng tiếng Anh dạng mệnh lệnh>
-
-# [Mô tả chi tiết nếu chưa đủ rõ]
 # - Vì sao cần thay đổi này?
 # - Giải pháp đã thực hiện là gì?
 
@@ -38,6 +36,7 @@
 #   db        : Database, EF Core Migrations, Seeding Data, Configurations, Indexing
 #
 # 3. Tài liệu và quản lí dự án dùng cho docs, chore, ci, build:
+#   content   : Dữ liệu học liệu Kanji, đối chiếu Hán Việt, kiểm duyệt nội dung, attribution
 #   srs       : Tài liệu Yêu cầu phần mềm, Software Requirements Specification
 #   sdd       : Tài liệu Thiết kế phần mềm, Software Design Document / ERD / OpenAPI
 #   adr       : Quyết định kiến trúc (Architectural Decision Records)
