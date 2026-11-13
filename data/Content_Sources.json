@@ -1,29 +1,38 @@
 [
   {
-    "id": "KANJIDIC2",
-    "name": "KANJIDIC2 Database",
-    "usage": "kanji-core",
+    "name": "KANJIDIC2",
+    "usage": "kanji-readings, meanings, stroke-count, jlpt-reference",
     "license": "CC BY-SA 4.0",
-    "licenseUrl": "https://www.edrdg.org/edrdg/licence.html",
-    "attributionText": "Dữ liệu cấu trúc Kanji thuộc bản quyền của KANJIDIC2 / EDRDG (Electronic Dictionary Research and Development Group).",
-    "licenseCheckedAt": "2026-11-11"
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "attributionText": "Dữ liệu Kanji từ KANJIDIC2, Electronic Dictionary Research and Development Group, CC BY-SA 4.0",
+    "url": "https://www.edrdg.org/wiki/index.php/KANJIDIC_Project",
+    "licenseCheckedAt": "10-11-2026"
   },
   {
-    "id": "JLPT_COMMUNITY_MAP",
-    "name": "JLPT Kanji Level Mapping Community List",
-    "usage": "jlpt-mapping",
+    "name": "Kanji alive",
+    "usage": "stroke-animation, example-audio",
     "license": "CC BY 4.0",
-    "licenseUrl": "http://www.kanjimaster.com/license",
-    "attributionText": "Danh sách ánh xạ cấp độ N5-N1 dựa trên tổng hợp dữ liệu cộng đồng JLPT bởi Jonathan Waller.",
-    "licenseCheckedAt": "2026-11-11"
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "attributionText": "Hoạt ảnh nét viết và âm thanh từ Kanji alive, CC BY 4.0",
+    "url": "https://github.com/kanjialive/kanji-data-media",
+    "licenseCheckedAt": "13-11-2026"
   },
   {
-    "id": "RENMEI_CURATED",
-    "name": "Renmei Internal Curated Kanji",
-    "usage": "curated-meanings",
-    "license": "Proprietary / Internal",
-    "licenseUrl": "https://renmei.app/terms",
-    "attributionText": "Dữ liệu Hán Việt, nghĩa tiếng Việt độc quyền biên soạn bởi dự án Renmei.",
-    "licenseCheckedAt": "2026-11-11"
+    "name": "KanjiVG",
+    "usage": "stroke-svg",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
+    "attributionText": "Dữ liệu nét viết từ KanjiVG, © Ulrich Apel, CC BY-SA 3.0, kanjivg.tagaini.net",
+    "url": "https://kanjivg.tagaini.net",
+    "licenseCheckedAt": "13-11-2026"
+  },
+  {
+    "name": "Hình minh họa tự biên soạn",
+    "usage": "mnemonic-image",
+    "license": "Chủ sở hữu ứng dụng Renmei giữ toàn quyền",
+    "licenseUrl": "",
+    "attributionText": "Hình minh họa gợi nhớ Kanji do Nguyễn Tấn Mạnh biên soạn",
+    "url": "",
+    "licenseCheckedAt": "13-11-2026"
   }
 ]

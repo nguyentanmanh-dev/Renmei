@@ -54,7 +54,7 @@
 - **Độ ưu tiên:** P0
 - **Tiêu chí chấp nhận (AC):**
   - [x] **AC-01:** học viên mở thẻ Kanji, màn hình thẻ hiển thị, hệ thống bắt buộc xuất hiện hình ảnh minh họa (`MnemonicImageUrl`), ảnh động nét viết (`StrokeOrderGifUrl`), và phiên âm Hiragana/Katakana chuẩn.
-  - [x] **AC-02:** học viên bấm vào biểu tượng loa trên thẻ, kích hoạt, hệ thống phát đúng file âm thanh chuẩn của từ vựng đó.
+  - [x] **AC-02:** học viên bấm vào biểu tượng loa trên thẻ, kích hoạt, hệ thống phát đúng bản thu âm người bản ngữ đọc **từ ghép ví dụ thông dụng** của từ kanji đó.
 
 #### FR-006: Duy trì chuỗi ngày học
 - **User Story:** tôi muốn hệ thống ghi nhận và hiển thị chuỗi ngày học liên tục để tạo thói quen và giữ động lực quay lại ứng dụng mỗi ngày.
