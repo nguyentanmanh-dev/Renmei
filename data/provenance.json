@@ -1,0 +1,18 @@
+[
+  {
+    "source": "KANJIDIC2",
+    "url": "http://www.edrdg.org/kanjidic/kanjidic2.xml.gz",
+    "downloadedAt": "14-11-2026",
+    "fileVersion": "2026-01 đọc từ thẻ file_version/date_of_creation trong XML",
+    "sha256": "<dán mã băm SHA-256 64 ký tự thực tế của tệp kanjidic2.xml.gz>",
+    "usedBy": "Importer literal, ja_on, ja_kun, meanings_en, stroke_count, rad_value, grade, freq, vietnam"
+  },
+  {
+    "source": "JLPT_COMMUNITY_MAP",
+    "url": "chưa tìm ra",
+    "downloadedAt": "14-11-2026",
+    "fileVersion": "2010-legacy-map",
+    "sha256": "<dán mã băm SHA-256 thực tế của tệp danh sách cấp độ>",
+    "usedBy": "Importer gán cấp độ N5–N1 tham chiếu"
+  }
+]
