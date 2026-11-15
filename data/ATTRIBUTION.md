@@ -21,11 +21,7 @@
 - **Nguồn:** [KANJIDIC Project](https://www.edrdg.org/wiki/index.php/KANJIDIC_Project) — Electronic Dictionary Research and Development Group.
 - **Giấy phép:** [Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)](https://creativecommons.org/licenses/by-sa/4.0/) ([Văn bản gốc EDRDG](https://www.edrdg.org/edrdg/licence.html))
 - **Ghi công:** Ứng dụng này dùng dữ liệu KANJIDIC2, tài sản của Electronic Dictionary Research and Development Group (EDRDG), theo giấy phép CC BY-SA 4.0.
-<<<<<<< HEAD
 - **Phạm vi sử dụng:** Ký tự Kanji, cách đọc Onyomi `ja_on`, Kunyomi `ja_kun`, số nét, bộ thủ, cấp độ tại Nhật `grade`, tần suất `freq`, nghĩa tiếng Anh và tham chiếu âm đọc tiếng Việt `vietnam`. Các trường thuộc bản quyền bên thứ ba như mã SKIP, Four Corner, Morohashi, De Roo, S&H, Pinyin, âm Hàn đã được loại bỏ hoàn toàn.
-=======
-- **Phạm vi sử dụng:** Ký tự Kanji, cách đọc Onyomi `ja_on`, Kunyomi `ja_kun`, số nét, bộ thủ, cấp độ tại Nhật `grade`, tần suất `freq`, nghĩa tiếng Anh và tham chiếu âm đọc tiếng Việt `vietnam`. Các trường thuộc bản quyền bên thứ ba như mã SKIP, Four Corner, Morohashi, Pinyin, âm Hàn đã được loại bỏ hoàn toàn.
->>>>>>> origin/develop
 - **Ngày kiểm tra giấy phép:** 14-11-2026
 
 ### 5. Tatoeba
