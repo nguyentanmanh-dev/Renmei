@@ -13,7 +13,7 @@ public class KanjiImportValidator
         IEnumerable<string> approvedN5List,
         IEnumerable<string> existingDbKanji)
     {
-        _sources = sources.ToDictionary(s => s.Id, s => s);
+        _sources = sources.ToDictionary(s => s.Id, s => s, StringComparer.OrdinalIgnoreCase);
         _approvedN5Set = new HashSet<string>(approvedN5List);
         _existingDbKanji = new HashSet<string>(existingDbKanji);
     }
@@ -26,7 +26,7 @@ public class KanjiImportValidator
             Level = record.JlptLevel ?? 0
         };
 
-        if (!_sources.TryGetValue(record.SourceId, out var source))
+        if (!_sources.TryGetValue(record.SourceId ?? string.Empty, out var source))
         {
             result.Issues.Add("LICENSE_MISSING");
         }
@@ -35,7 +35,7 @@ public class KanjiImportValidator
             result.Issues.Add("LICENSE_UNVERIFIED");
         }
 
-        if (string.IsNullOrWhiteSpace(record.SourceRef) || record.JlptLevel is < 1 or > 5)
+        if (string.IsNullOrWhiteSpace(record.SourceRef) || record.JlptLevel is null or < 1 or > 5)
         {
             result.Issues.Add("PROVENANCE_MISSING");
         }
@@ -57,15 +57,20 @@ public class KanjiImportValidator
             result.Issues.Add("REQUIRED_MISSING:meanings_vi");
         if (record.Examples.Count == 0)
             result.Issues.Add("REQUIRED_MISSING:examples");
+        if (string.IsNullOrWhiteSpace(record.HanViet))
+            result.Issues.Add("REQUIRED_MISSING:han_viet");
 
-        bool hasCriticalError = result.Issues.Any(i =>
-            i.StartsWith("LICENSE") || i.StartsWith("PROVENANCE") || i.StartsWith("DUPLICATE"));
+        bool hasCriticalError = result.Issues.Any(i => i == "DUPLICATE_IN_FILE" || i == "PROVENANCE_MISSING" || i == "DUPLICATE_IN_DB");
 
         if (hasCriticalError)
         {
             result.Status = "Rejected";
         }
-        else if (result.Issues.Any(i => i.StartsWith("REQUIRED_MISSING")))
+        else if (result.Issues.Contains("DUPLICATE_IN_DB"))
+        {
+            result.Status = "Skipped";
+        }
+        else if (result.Issues.Any(i => i.StartsWith("REQUIRED_MISSING")) || record.JlptLevel is <= 3)
         {
             result.Status = "Draft";
         }

@@ -8,6 +8,7 @@ public record ContentSource(
     string LicenseUrl,
     string AttributionText,
     string LicenseCheckedAt
+    string Url = ""
 );
 
 public class RawKanjiRecord

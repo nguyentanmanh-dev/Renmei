@@ -1,6 +1,6 @@
 # ADR-001: Lựa chọn .NET 10 làm Nền tảng Backend Web API chính
 
-* **Trạng thái**: Approved
+* **Trạng thái**: Accepted
 * **Người quyết định**: Nguyễn Tấn Mạnh
 * **Ngày quyết định**: 04-11-2026
 
@@ -33,8 +33,8 @@ Hệ thống đòi hỏi một nền tảng Backend đảm bảo các tiêu chí
 
 ### Tác động tích cực:
 - **Cải thiện tốc độ API Response**: Thời gian phản hồi API giảm đáng kể nhờ các tối ưu hóa mới nhất của ASP.NET Core trên .NET 10.
-- **Dễ bảo trì và mở rộng**: Cấu trúc Clean Architecture kết hợp với C# 13/.NET 10 giúp codebase gọn gàng, Type-safe và hạn chế lỗi runtime.
-- **Real-time mượt mà**: ASP.NET Core SignalR tích hợp sẵn giúp triển khai cụm tính năng đấu trí PvP Mini-games Karuta, Shiritori một cách chuẩn xác và ít tốn tài nguyên.
+- **Dễ bảo trì và mở rộng**: Cấu trúc Clean Architecture kết hợp với C# 14/.NET 10 giúp codebase gọn gàng, Type-safe và hạn chế lỗi runtime.
+- **Real-time mượt mà**: ASP.NET Core SignalR dùng cho tin nhắn, thông báo và cập nhật máu Boss, thi đấu PvP bất đồng bộ qua REST theo FR-021.
 
 ### Tác động tiêu cực và thách thức:
 - **Yêu cầu cập nhật công cụ phát triển**: Đội ngũ phát triển cần đảm bảo cài đặt .NET 10 SDK và sử dụng Visual Studio hoặc VS Code với C# Dev Kit tương thích.

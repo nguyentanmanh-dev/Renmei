@@ -1,4 +1,4 @@
-﻿# SDD: Software Design Document
+﻿    # SDD: Software Design Document
 
 | Phiên bản : 1.0 | Ngày : 02-11-2026 | Trạng thái : Draft | Cổng : R1-G2 | Người duyệt : Nguyễn Tấn Mạnh |
 
@@ -25,8 +25,8 @@
 - **Processing Logic:**
   - Tiếp nhận `rating` từ API. Ánh xạ từ UI: `Again = 1`, `Hard = 3`, `Good = 4`, `Easy = 5`.
   - Kiểm tra điều kiện:
-    - Nếu `rating >= 3`: Đánh dấu thành công. Cập nhật `repetitions = repetitions + 1`. Tính `interval` mới theo công thức I(n) = I(n-1) x EF. Cập nhật trạng thái thẻ sang `Learning`, `Review` hoặc `Mastered`.
-    - Nếu `rating < 3`: Đánh dấu thất bại (Quên). Reset `repetitions = 0`, `interval = 1`.
-  - Cập nhật hệ số dễ EF' = EF + (0.1 - (5 - q) x (0.08 + (5 - q) x 0.02))$, giới hạn EF >= 1.3.
+    - Nếu `rating >= 3`: Đánh dấu thành công. Cập nhật `repetitions = repetitions + 1`. Tính `interval` mới theo công thức Interval(n) = [Interval(n-1) + N] x EF Cập nhật trạng thái thẻ sang `Learning`, `Review` hoặc `Mastered`.
+    - Nếu `rating < 3`: Đánh dấu Quên. Reset `repetitions = 0`, `interval = 1`.
+    - Cập nhật hệ số dễ EF' = EF + (0.15 - (5 - q) x (0.08 + (5 - q) x 0.02))$, giới hạn EF >= 1.3.
   - Lưu bản ghi lịch sử vào `ReviewLogs` chứa `rating` và `time_taken_ms`.
 

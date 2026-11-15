@@ -1,6 +1,6 @@
 ﻿# SRS: Software Requirements Specification
 
-| Phiên bản : 1.0 | Ngày : 01-11-2026 | Trạng thái : Frozen | Cổng : R1-G1 | Người duyệt : Nguyễn Tấn Mạnh |
+| Phiên bản : 1.1 | Ngày : 01-11-2026 | Trạng thái : Frozen | Cổng : R1-G1 | Người duyệt : Nguyễn Tấn Mạnh |
 
 ## 1. Giới thiệu
 - **Mục đích**: Tài liệu xác định toàn bộ yêu cầu chức năng và phi chức năng cho ứng dụng học Kanji Renmei (Release 1).
@@ -38,7 +38,7 @@
   - [x] **AC-01:** Kanji đang ở trạng thái `Review`, người dùng chọn "Nhớ" chấm điểm >= 3, Hệ thống tính số ngày chờ mới bằng công thức `Interval` mới = `Interval` cũ x `EaseFactor`, và lùi ngày ôn tiếp theo `NextReviewDate` tương ứng với `Interval` mới.
   - [x] **AC-02:** Kanji ở bất kỳ trạng thái nào, người dùng chọn "Quên" chấm điểm < 3, hệ thống reset `Interval` về 1 ngày, và đưa chữ đó quay lại hàng đợi ôn tập trong cùng ngày.
   - [x] **AC-03:** học viên hoàn thành 1 lượt chấm điểm, hệ thống lưu kết quả, tự động ghi nhận đúng 1 dòng vào `ReviewLogs` lưu các thông tin: điểm số `Rating`, thời gian chờ `Interval`, độ dễ `EaseFactor`, và thời gian suy nghĩ `TimeTakenMs`.
-  - [x] **AC-04:** một chữ Kanji đang học, người dùng duy trì chuỗi chấm điểm >= 3 với số ngày chờ `Interval` >= 21 ngày, hệ thống gắn nhãn trạng thái Kanji đó đã được ghi nhớ sâu `Mastered`.
+  - [x] **AC-04:** một chữ Kanji đang học, người dùng có số ngày chờ `Interval` >= 21 ngày và chuỗi đánh giá Nhớ liên tục >= 3 lần, hệ thống gắn nhãn trạng thái Kanji đó đã được ghi nhớ sâu `Mastered`.
   - [x] **AC-05:** một bài bị ôn trễ N ngày so với lịch ôn, người dùng mở ra ôn vẫn bấm "Nhớ" chấm điểm >= 3, hệ thống tính toán `Interval` tiếp theo dựa trên khoảng thời gian thực tế người học ghi nhớ được (`Interval` cũ + N) x `EaseFactor`.
 
 #### FR-004: Hàng đợi học hằng ngày và Thống kê
@@ -50,10 +50,10 @@
   - [x] **AC-03:** sang ngày mới, học viên truy cập ứng dụng, hệ thống quét và nạp vào hàng đợi theo thứ tự ưu tiên: Toàn bộ từ Kanji bị "Quên" hoặc quá hạn từ ngày cũ --> Các bài ôn đúng hạn hôm nay --> Các từ Kanji mới theo hạn mức mục tiêu đã thiết lập
 
 #### FR-005: Học từ vựng có hình ảnh minh họa và giọng đọc chuẩn
-- **User Story:** tôi muốn nhìn thấy hình ảnh minh họa thực tế và giọng đọc chuẩn xác cho từng từ Kanji, để tăng khả năng ghi nhớ qua ngữ cảnh và phát âm chuẩn ngay từ đầu.
+- **User Story:** tôi muốn nhìn thấy hình ảnh minh họa gợi nhớ và giọng đọc chuẩn xác cho từng từ Kanji, để tăng khả năng ghi nhớ qua ngữ cảnh và phát âm chuẩn ngay từ đầu.
 - **Độ ưu tiên:** P0
 - **Tiêu chí chấp nhận (AC):**
-  - [x] **AC-01:** học viên mở thẻ Kanji, màn hình thẻ hiển thị, hệ thống bắt buộc xuất hiện hình ảnh minh họa (`MnemonicImageUrl`), ảnh động nét viết (`StrokeOrderGifUrl`), và phiên âm Hiragana/Katakana chuẩn.
+  - [x] **AC-01:** học viên mở thẻ Kanji, màn hình thẻ hiển thị, hệ thống bắt buộc xuất hiện hình ảnh minh họa (`MnemonicImageUrl`), ảnh động nét viết (`StrokeOrderAnimationUrl`), và phiên âm Hiragana/Katakana chuẩn.
   - [x] **AC-02:** học viên bấm vào biểu tượng loa trên thẻ, kích hoạt, hệ thống phát đúng bản thu âm người bản ngữ đọc **từ ghép ví dụ thông dụng** của từ kanji đó.
 
 #### FR-006: Duy trì chuỗi ngày học
@@ -343,7 +343,7 @@
 - **Tiêu chí kiểm thử:**
   - [x] **NFR-002.1:** Mật khẩu người dùng bắt buộc phải mã hóa bằng thuật toán băm an toàn trước khi lưu vào Database; tuyệt đối không lưu mật khẩu dạng văn bản thô.
   - [x] **NFR-002.2:** Xác thực API sử dụng mô hình JWT Bearer Token. Access Token có thời gian ngắn, Refresh Token được lưu vết và thu hồi ngay khi tài khoản bị khóa.
-  - [x] **NFR-002.3:** Áp dụng phân quyền theo tài nguyên, các endpoint khu vực `/api/admin/...` bắt buộc kiểm tra Policy `EditorOrAdmin` hoặc `AdminOnly`. Trả về mã lỗi `403 Forbidden` nếu truy cập trái phép.
+  - [x] **NFR-002.3:** Áp dụng phân quyền theo tài nguyên, các endpoint khu vực `/api/v1/admin/...` bắt buộc kiểm tra Policy `EditorOrAdmin` hoặc `AdminOnly`. Trả về mã lỗi `403 Forbidden` nếu truy cập trái phép.
 
 #### NFR-003: Khả năng ngoại tuyến và đồng bộ
 - **Mô tả:** Học viên có thể tiếp tục học và ôn tập ngay cả khi mất kết nối mạng internet tạm thời.
@@ -408,15 +408,19 @@
   - **Mô tả:** Chức năng xã hội phải có biện pháp kiểm soát và thông tin rõ ràng cho người dùng.
   - **Tiêu chí kiểm thử:**
     - [x] **NFR-011.1:** Nút Chặn và Báo cáo có ngay trong hội thoại và hồ sơ người chơi, tối đa hai thao tác từ màn hình đó.
-    - [x] **NFR-011.2:** Báo cáo được ghi nhận kèm bằng chứng và hiển thị cho Admin, mục tiêu đề xuất là xử lý tối thiểu 90% báo cáo trong 72 giờ, đo bằng số liệu của FR-018 AC-04.
+    - [x] **NFR-011.2:** Báo cáo được ghi nhận kèm bằng chứng và hiển thị cho Admin, mục tiêu đề xuất là xử lý tối thiểu 90% báo cáo trong 72 giờ, đo bằng số liệu của FR-018 AC-02.
     - [x] **NFR-011.3:** Quy tắc ứng xử và thông báo riêng tư về tin nhắn được hiển thị và được đồng ý trước lần dùng chức năng xã hội đầu tiên.
     - [x] **NFR-011.4:** Chính sách bảo mật được cập nhật nêu rõ dữ liệu tin nhắn, danh sách bạn và thông báo trước khi bật chức năng cho người dùng thật.
     - [x] **NFR-011.5:** Trước khi phát hành, đối chiếu yêu cầu hiện hành của nền tảng phân phối về nội dung do người dùng tạo ra và độ tuổi và ghi kết quả vào hồ sơ cổng phát hành.
 
+### NFR-012: Ghi công nguồn dữ liệu (Data Attribution)
+- **Mô tả:** Ứng dụng phải cung cấp màn hình **"Giới thiệu và ghi công"** truy cập trực tiếp từ menu chính, hiển thị đầy đủ nội dung ghi công từ tệp `data/ATTRIBUTION.md` bao gồm EDRDG/KANJIDIC2, Tatoeba, Kanji alive và các nguồn từ điển tham chiếu kèm liên kết tới văn bản giấy phép tương ứng.
+- **Tiêu chí nghiệm thu:** Người dùng mở được màn hình ghi công từ menu chính trong tối đa 2 thao tác chạm, nội dung khớp với `ATTRIBUTION.md`.
+
+
 ## 5. Ngoài phạm vi
 - Chưa hỗ trợ nhận diện chữ viết tay Kanji qua Camera/AI.
 - Chưa hỗ trợ thanh toán trực tuyến qua cổng Momo/ZaloPay.
-- Hệ thống mạng xã hội VÀ tương tác cộng đồng.
 - Đa ngôn ngữ giao diện.
 
 ## 6. Chỉ số Thành công
