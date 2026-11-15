@@ -8,12 +8,17 @@
     "usedBy": "Importer literal, ja_on, ja_kun, meanings_en, stroke_count, rad_value, grade, freq, vietnam"
   },
   {
+<<<<<<< HEAD
     "source": "TANOS_JLPT",
+=======
+    "source": "JLPT_COMMUNITY_MAP",
+>>>>>>> origin/develop
     "url": "chưa tìm ra",
     "downloadedAt": "14-11-2026",
     "fileVersion": "2010-legacy-map",
     "sha256": "<dán mã băm SHA-256 thực tế của tệp danh sách cấp độ>",
     "usedBy": "Importer gán cấp độ N5–N1 tham chiếu"
+<<<<<<< HEAD
   },
   {
     "source": "TATOEBA",
@@ -38,5 +43,7 @@
     "fileVersion": "r20250816",
     "sha256": "<dán mã băm SHA-256 của gói phát hành KanjiVG SVG>",
     "usedBy": "Media Pipeline dữ liệu vector nét viết SVG dự phòng"
+=======
+>>>>>>> origin/develop
   }
 ]
