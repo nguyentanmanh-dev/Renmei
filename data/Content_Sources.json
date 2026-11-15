@@ -1,14 +1,16 @@
 [
   {
+    "id": "KANJIDIC2",
     "name": "KANJIDIC2",
-    "usage": "kanji-readings, meanings, stroke-count, jlpt-reference",
+    "usage": "kanji-core, readings, meanings-en, stroke-count, radical, grade, freq, han-viet-reference, jlpt-reference",
     "license": "CC BY-SA 4.0",
     "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-    "attributionText": "Dữ liệu Kanji từ KANJIDIC2, Electronic Dictionary Research and Development Group, CC BY-SA 4.0",
+    "attributionText": "Ứng dụng này dùng dữ liệu KANJIDIC2, tài sản của Electronic Dictionary Research and Development Group, theo giấy phép CC BY-SA 4.0.",
     "url": "https://www.edrdg.org/wiki/index.php/KANJIDIC_Project",
-    "licenseCheckedAt": "10-11-2026"
+    "licenseCheckedAt": "14-11-2026"
   },
   {
+    "id": "KANJI_ALIVE",
     "name": "Kanji alive",
     "usage": "stroke-animation, example-audio",
     "license": "CC BY 4.0",
@@ -18,6 +20,7 @@
     "licenseCheckedAt": "13-11-2026"
   },
   {
+    "id": "KANJIVG",
     "name": "KanjiVG",
     "usage": "stroke-svg",
     "license": "CC BY-SA 3.0",
@@ -27,33 +30,7 @@
     "licenseCheckedAt": "13-11-2026"
   },
   {
-    "name": "Hình minh họa tự biên soạn",
-    "usage": "mnemonic-image",
-    "license": "Chủ sở hữu ứng dụng Renmei giữ toàn quyền",
-    "licenseUrl": "",
-    "attributionText": "Hình minh họa gợi nhớ Kanji do Nguyễn Tấn Mạnh biên soạn",
-    "url": "",
-    "licenseCheckedAt": "13-11-2026"
-  },
-  {
-    "name": "KANJIDIC2",
-    "usage": "kanji-core",
-    "license": "CC BY-SA 4.0",
-    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
-    "attributionText": "Ứng dụng này dùng dữ liệu KANJIDIC2, tài sản của Electronic Dictionary Research and Development Group, theo giấy phép CC BY-SA 4.0.",
-    "url": "https://www.edrdg.org/wiki/index.php/KANJIDIC_Project",
-    "licenseCheckedAt": "14-11-2026"
-  },
-  {
-    "name": "Danh sách cấp độ JLPT - tanos.co.uk",
-    "usage": "jlpt-level",
-    "license": "chưa xác định",
-    "licenseUrl": "",
-    "attributionText": "Danh sách Kanji theo cấp JLPT từ tài nguyên của Jonathan Waller. Đây là danh sách không chính thức.",
-    "url": "",
-    "licenseCheckedAt": "14-11-2026"
-  },
-  {
+    "id": "TATOEBA",
     "name": "Tatoeba",
     "usage": "example-sentence",
     "license": "CC BY 2.0 FR",
@@ -61,5 +38,25 @@
     "attributionText": "Các câu ví dụ lấy từ Tatoeba, theo CC BY 2.0 FR, mỗi câu ghi mã câu và người đóng góp.",
     "url": "https://tatoeba.org",
     "licenseCheckedAt": "14-11-2026"
+  },
+  {
+    "id": "TANOS_JLPT",
+    "name": "Danh sách cấp độ JLPT - tanos.co.uk",
+    "usage": "jlpt-level",
+    "license": "chưa xác định",
+    "licenseUrl": "",
+    "attributionText": "Danh sách Kanji theo cấp JLPT từ tài nguyên của Jonathan Waller. Đây là danh sách không chính thức.",
+    "url": "https://www.tanos.co.uk/jlpt/skills/kanji/",
+    "licenseCheckedAt": ""
+  },
+  {
+    "id": "RENMEI_ORIGINAL",
+    "name": "Hình minh họa tự biên soạn",
+    "usage": "mnemonic-image, mnemonic-text, meanings-vi, examples",
+    "license": "Chủ sở hữu ứng dụng Renmei giữ toàn quyền",
+    "licenseUrl": "",
+    "attributionText": "Hình minh họa gợi nhớ Kanji do Nguyễn Tấn Mạnh biên soạn",
+    "url": "",
+    "licenseCheckedAt": "13-11-2026"
   }
 ]

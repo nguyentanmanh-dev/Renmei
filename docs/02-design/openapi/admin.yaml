@@ -4,9 +4,9 @@ info:
   description: Tài liệu thiết kế RESTful API chuẩn OpenAPI 3.0 cho Phân hệ Quản trị viên (Admin Portal).
   version: 1.0.0
 servers:
-  - url: https://api.renmei.app/v1/admin
+  - url: https://api.renmei.app/api/v1/admin
     description: Production Admin Server
-  - url: http://localhost:5000/v1/admin
+  - url: http://localhost:5000/api/v1/admin
     description: Local Development Admin Server
 
 paths:
@@ -32,8 +32,10 @@ paths:
         - name: jlptLevel
           in: query
           schema:
-            type: string
-            example: "N5"
+            type: integer
+            minimum: 1
+            maximum: 5
+            example: 5
         - name: status
           in: query
           schema:
@@ -79,8 +81,9 @@ paths:
           in: path
           required: true
           schema:
-            type: string
-            format: uuid
+          type: integer
+          format: int32
+          example: 1
       responses:
         '200':
           description: Chi tiết Kanji
@@ -100,8 +103,9 @@ paths:
           in: path
           required: true
           schema:
-            type: string
-            format: uuid
+          type: integer
+          format: int32
+          example: 1
       requestBody:
         required: true
         content:
@@ -127,11 +131,99 @@ paths:
           in: path
           required: true
           schema:
-            type: string
-            format: uuid
+          type: integer
+          format: int32
+          example: 1
       responses:
         '204':
           description: Xóa thành công
+
+/kanji/{id}/submit-review:
+    post:
+      summary: Gửi duyệt thẻ Kanji Draft -> InReview
+      tags:
+        - Admin Kanji Management
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Đã chuyển trạng thái sang InReview
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminKanjiDetailDto'
+        '400':
+          description: Trạng thái hiện tại không hợp lệ hoặc thiếu trường bắt buộc
+
+  /kanji/{id}/publish:
+    post:
+      summary: Xuất bản thẻ Kanji (InReview -> Published)
+      tags:
+        - Admin Kanji Management
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Xuất bản thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminKanjiDetailDto'
+        '400':
+          description: Thiếu media hoặc chưa đạt điều kiện xuất bản
+
+  /kanji/{id}/revisions:
+    get:
+      summary: Lấy lịch sử các phiên bản chỉnh sửa của Kanji
+      tags:
+        - Admin Kanji Management
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Danh sách các phiên bản Kanji
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      format: uuid
+                    version:
+                      type: integer
+                    contentJson:
+                      type: string
+                    createdBy:
+                      type: string
+                      format: uuid
+                    createdAt:
+                      type: string
+                      format: date-time
+
 
 # FR-011: Quản lý tài khoản user và an toàn hệ thống
   /users:
@@ -217,8 +309,8 @@ paths:
               properties:
                 status:
                   type: string
-                  enum: [Active, Suspended, Banned]
-                  example: "Suspended"
+                  enum: [Active, Locked]
+                  example: "Locked"
       responses:
         '200':
           description: Cập nhật trạng thái thành công
@@ -232,10 +324,17 @@ paths:
       security:
         - BearerAuth: []
       parameters:
+        - name: type
+          in: query
+          schema:
+            type: string
+            enum: [ContentError, Bug, Suggestion]
+            example: "ContentError"
         - name: status
           in: query
           schema:
             type: string
+            enum: [Open, InProgress, Resolved, Rejected]
             example: "Open"
       responses:
         '200':
@@ -317,6 +416,138 @@ paths:
 
 
 # FR-014: Quản lý bài kiểm tra đầu vào
+/placement-questions:
+    get:
+      summary: Lấy danh sách câu hỏi kiểm tra đầu vào
+      tags:
+        - Admin Placement Management
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: jlptLevel
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 5
+        - name: isActive
+          in: query
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: Danh sách câu hỏi đầu vào
+    post:
+      summary: Tạo mới câu hỏi kiểm tra đầu vào
+      tags:
+        - Admin Placement Management
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [content, jlptLevel, options]
+              properties:
+                kanjiId:
+                  type: integer
+                  format: int32
+                  nullable: true
+                content:
+                  type: string
+                jlptLevel:
+                  type: integer
+                  minimum: 1
+                  maximum: 5
+                options:
+                  type: array
+                  minItems: 2
+                  items:
+                    type: object
+                    required: [optionText, isCorrect]
+                    properties:
+                      optionText:
+                        type: string
+                      isCorrect:
+                        type: boolean
+      responses:
+        '201':
+          description: Tạo câu hỏi thành công
+
+  /placement-questions/{id}:
+    put:
+      summary: Cập nhật nội dung câu hỏi đầu vào
+      tags:
+        - Admin Placement Management
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [content, jlptLevel, options]
+              properties:
+                content:
+                  type: string
+                jlptLevel:
+                  type: integer
+                  minimum: 1
+                  maximum: 5
+                options:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      optionText:
+                        type: string
+                      isCorrect:
+                        type: boolean
+      responses:
+        '200':
+          description: Cập nhật thành công
+
+  /placement-questions/{id}/active:
+    patch:
+      summary: Bật/tắt trạng thái hoạt động của câu hỏi đầu vào (FR-014 AC-02)
+      tags:
+        - Admin Placement Management
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [isActive]
+              properties:
+                isActive:
+                  type: boolean
+      responses:
+        '200':
+          description: Cập nhật trạng thái thành công
+        '409':
+          description: Không thể vô hiệu hóa vì số lượng câu hỏi active sẽ giảm xuống dưới ngưỡng tối thiểu (AC-02)
+
+
 # FR-015: Báo cáo chỉ số và Analytics Sản phẩm 
   /dashboard/metrics:
     get:
@@ -346,6 +577,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/DashboardMetricsResponse'
 
+
+# FR-016 đến FR-018: chưa thiết kế, thuộc R4/R5
+
 # Khuôn mẫu và cổng bảo vệ
 components:
   securitySchemes:
@@ -370,8 +604,10 @@ components:
           type: string
           example: "NGUYỆT"
         jlptLevel:
-          type: string
-          example: "N5"
+          type: integer
+          minimum: 1
+          maximum: 5
+          example: 5
         strokeCount:
           type: integer
           example: 4
@@ -419,8 +655,9 @@ components:
       type: object
       properties:
         id:
-          type: string
-          format: uuid
+        type: integer
+        format: int32
+        example: 1
         character:
           type: string
           example: "月"
@@ -428,8 +665,10 @@ components:
           type: string
           example: "NGUYỆT"
         jlptLevel:
-          type: string
-          example: "N5"
+          type: integer
+          minimum: 1
+          maximum: 5
+          example: 5
         version:
           type: integer
           example: 2
@@ -480,7 +719,7 @@ components:
           type: array
           items:
             type: string
-          example: ["Learner", "ContentEditor"]
+          example: ["Learner", "Editor"]
         createdAt:
           type: string
           format: date-time
@@ -513,8 +752,10 @@ components:
           type: string
           format: uuid
         kanjiId:
-          type: string
-          format: uuid
+          type: integer
+          format: int32
+          nullable: true
+          example: 1
         type:
           type: string
           example: "ContentError"

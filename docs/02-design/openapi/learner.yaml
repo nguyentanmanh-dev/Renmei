@@ -4,11 +4,11 @@ info:
   description: Mọi điểm cuối trừ nhóm Auth công khai cần Bearer JWT. Mỗi thao tác có `x-requirements` liệt kê mã yêu cầu để lập RTM. Bản thiết kế chưa được kiểm chứng bằng code.
   version: 1.1.0
 servers:
-  - url: https://api.renmei.app/v1
+  - url: https://api.renmei.app/api/v1
     description: Production Server
-  - url: http://localhost:5000/v1
+  - url: http://localhost:5000/api/v1
     description: Local Development Server
-
+   
 security:
 - bearerAuth: []
 tags:
@@ -51,7 +51,7 @@ tags:
 
 # Xác thực tài khoản
 paths:
-  /api/auth/register:
+  /auth/register:
     post:
       tags:
       - Auth
@@ -79,7 +79,7 @@ paths:
         '429': &id002
           $ref: '#/components/responses/TooManyRequests'
       security: []
-  /api/auth/login:
+  /auth/login:
     post:
       tags:
       - Auth
@@ -106,7 +106,7 @@ paths:
         '401': &id003
           $ref: '#/components/responses/Unauthorized'
       security: []
-  /api/auth/refresh:
+  /auth/refresh:
     post:
       tags:
       - Auth
@@ -131,7 +131,7 @@ paths:
         '400': *id001
         '429': *id002
       security: []
-  /api/auth/logout:
+  /auth/logout:
     post:
       tags:
       - Auth
@@ -156,7 +156,7 @@ paths:
         '404': &id004
           $ref: '#/components/responses/NotFound'
         '429': *id002
-  /api/auth/verify-email:
+  /auth/verify-email:
     post:
       tags:
       - Auth
@@ -177,7 +177,7 @@ paths:
         '404': *id004
         '429': *id002
       security: []
-  /api/auth/forgot-password:
+  /auth/forgot-password:
     post:
       tags:
       - Auth
@@ -197,7 +197,7 @@ paths:
         '400': *id001
         '429': *id002
       security: []
-  /api/auth/reset-password:
+  /auth/reset-password:
     post:
       tags:
       - Auth
@@ -218,7 +218,7 @@ paths:
         '404': *id004
         '429': *id002
       security: []
-  /api/me:
+  /me:
     get:
       tags:
       - Me
@@ -285,7 +285,7 @@ paths:
         '429': *id002
 
 # Nội dung Kanji đã xuất bản, danh sách, chi tiết, media
-  /api/kanji:
+  /kanji:
     get:
       tags:
       - Kanji
@@ -331,7 +331,7 @@ paths:
         '403': *id005
         '404': *id004
         '429': *id002
-  /api/kanji/{id}:
+  /kanji/{id}:
     get:
       tags:
       - Kanji
@@ -359,7 +359,7 @@ paths:
 
 #FR-002: Kiểm tra trình độ đầu vào
 
-  /api/placement-test/attempts:
+  /placement-test/attempts:
     post:
       tags:
       - Placement-test
@@ -379,7 +379,8 @@ paths:
         '403': *id005
         '404': *id004
         '429': *id002
-  /api/placement-test/attempts/{attemptId}/submit:
+
+  /placement-test/attempts/{attemptId}/submit:
     post:
       tags:
       - Placement-test
@@ -412,7 +413,7 @@ paths:
         '403': *id005
         '404': *id004
         '429': *id002
-  /api/placement-test/skip:
+  /placement-test/skip:
     post:
       tags:
       - Placement-test
@@ -432,7 +433,7 @@ paths:
         '403': *id005
         '404': *id004
         '429': *id002
-  /api/me/level:
+  /me/level:
     put:
       tags:
       - Placement-test
@@ -460,7 +461,7 @@ paths:
         '429': *id002
 
 # Học tập, ôn tập, SM-2, hàng đợi, chuỗi ngày học
-  /api/queue/today:
+  /queue/today:
     get:
       tags:
       - Learning
@@ -481,7 +482,7 @@ paths:
         '403': *id005
         '404': *id004
         '429': *id002
-  /api/learning/start:
+  /learning/start:
     post:
       tags:
       - Learning
@@ -508,7 +509,7 @@ paths:
         '403': *id005
         '404': *id004
         '429': *id002
-  /api/reviews:
+  /reviews:
     post:
       tags:
       - Learning
@@ -536,7 +537,7 @@ paths:
         '403': *id005
         '404': *id004
         '429': *id002
-  /api/reviews/batch:
+  /reviews/batch:
     post:
       tags:
       - Learning
@@ -566,7 +567,7 @@ paths:
 
 
 # Thống kê học tập, chuỗi ngày học
-  /api/stats/summary:
+  /stats/summary:
     get:
       tags:
       - Stats
@@ -586,7 +587,7 @@ paths:
         '403': *id005
         '404': *id004
         '429': *id002
-  /api/streak:
+  /streak:
     get:
       tags:
       - Stats
@@ -608,7 +609,7 @@ paths:
         '429': *id002
 
 # Báo lỗi nội dung, góp ý, phản hồi
-  /api/feedback:
+  /feedback:
     post:
       tags:
       - Feedback
@@ -636,7 +637,7 @@ paths:
         '429': *id002
 
 # Hội thoại tình huống, kịch bản, phản hồi
-  /api/dialogues/scenarios:
+  /dialogues/scenarios:
     get:
       tags:
       - Dialogue
@@ -663,7 +664,7 @@ paths:
         '403': *id005
         '404': *id004
         '429': *id002
-  /api/dialogues/sessions:
+  /dialogues/sessions:
     post:
       tags:
       - Dialogue
@@ -693,7 +694,7 @@ paths:
         '403': *id005
         '404': *id004
         '429': *id002
-  /api/dialogues/sessions/{id}/messages:
+  /dialogues/sessions/{id}/messages:
     post:
       tags:
       - Dialogue
@@ -724,7 +725,7 @@ paths:
         '403': *id005
         '404': *id004
         '429': *id002
-  /api/dialogues/sessions/{id}/skip:
+  /dialogues/sessions/{id}/skip:
     post:
       tags:
       - Dialogue
@@ -747,7 +748,7 @@ paths:
         '429': *id002
 
 # Đấu trường: ván chơi, trận, bảng xếp hạng
-  /api/games:
+  /games:
     get:
       tags:
       - Arena
@@ -774,7 +775,7 @@ paths:
         '403': *id005
         '404': *id004
         '429': *id002
-  /api/games/profile:
+  /games/profile:
     get:
       tags:
       - Arena
@@ -820,7 +821,7 @@ paths:
         '403': *id005
         '404': *id004
         '429': *id002
-  /api/games/{gameCode}/sessions:
+  /games/{gameCode}/sessions:
     post:
       tags:
       - Arena
@@ -860,7 +861,7 @@ paths:
         '403': *id005
         '404': *id004
         '429': *id002
-  /api/game-sessions/{sessionId}/events:
+  /game-sessions/{sessionId}/events:
     post:
       tags:
       - Arena
@@ -892,7 +893,7 @@ paths:
         '403': *id005
         '404': *id004
         '429': *id002
-  /api/game-sessions/{sessionId}/complete:
+  /game-sessions/{sessionId}/complete:
     post:
       tags:
       - Arena
@@ -919,7 +920,7 @@ paths:
         '403': *id005
         '404': *id004
         '429': *id002
-  /api/matches:
+  /matches:
     get:
       tags:
       - Arena
@@ -951,7 +952,7 @@ paths:
         '403': *id005
         '404': *id004
         '429': *id002
-  /api/matches/{matchId}:
+  /matches/{matchId}:
     get:
       tags:
       - Arena
@@ -977,7 +978,7 @@ paths:
         '403': *id005
         '404': *id004
         '429': *id002
-  /api/leaderboards:
+  /leaderboards:
     get:
       tags:
       - Arena
@@ -1011,7 +1012,7 @@ paths:
         '403': *id005
         '404': *id004
         '429': *id002
-  /api/seasons/current:
+  /seasons/current:
     get:
       tags:
       - Arena
@@ -1031,7 +1032,7 @@ paths:
         '403': *id005
         '404': *id004
         '429': *id002
-  /api/raids/current:
+  /raids/current:
     get:
       tags:
       - Raids
@@ -1058,7 +1059,7 @@ paths:
         '429': *id002
 
 # Boss Raid: bắt đầu lượt tấn công, bảng sát thương bạn bè
-  /api/raids/{bossId}/attempts:
+  /raids/{bossId}/attempts:
     post:
       tags:
       - Raids
@@ -1084,7 +1085,7 @@ paths:
         '403': *id005
         '404': *id004
         '429': *id002
-  /api/raids/{bossId}/friends-board:
+  /raids/{bossId}/friends-board:
     get:
       tags:
       - Raids
@@ -1113,7 +1114,7 @@ paths:
         '429': *id002
 
 # Vụ án: danh sách, chương, giải manh mối, gợi ý
-  /api/cases:
+  /cases:
     get:
       tags:
       - Cases
@@ -1140,7 +1141,7 @@ paths:
         '403': *id005
         '404': *id004
         '429': *id002
-  /api/cases/{caseId}/current-chapter:
+  /cases/{caseId}/current-chapter:
     get:
       tags:
       - Cases
@@ -1165,7 +1166,7 @@ paths:
         '403': *id005
         '404': *id004
         '429': *id002
-  /api/cases/{caseId}/chapters/{chapterId}/answer:
+  /cases/{caseId}/chapters/{chapterId}/answer:
     post:
       tags:
       - Cases
@@ -1200,7 +1201,7 @@ paths:
         '403': *id005
         '404': *id004
         '429': *id002
-  /api/cases/{caseId}/chapters/{chapterId}/hint:
+  /cases/{caseId}/chapters/{chapterId}/hint:
     post:
       tags:
       - Cases
@@ -1231,7 +1232,7 @@ paths:
         '429': *id002
 
 # Shadowing: nghe và nhắc lại, chấm điểm
-  /api/shadowing/sessions/{sessionId}/attempts:
+  /shadowing/sessions/{sessionId}/attempts:
     post:
       tags:
       - Shadowing
@@ -1265,7 +1266,7 @@ paths:
         '429': *id002
 
 # Friends: tìm bạn, danh sách bạn bè, xóa bạn, thành tích đối đầu
-  /api/players/search:
+  /players/search:
     get:
       tags:
       - Friends
@@ -1294,7 +1295,7 @@ paths:
         '403': *id005
         '404': *id004
         '429': *id002
-  /api/players/{userId}:
+  /players/{userId}:
     get:
       tags:
       - Friends
@@ -1319,7 +1320,7 @@ paths:
         '403': *id005
         '404': *id004
         '429': *id002
-  /api/social/settings:
+  /social/settings:
     get:
       tags:
       - Friends
@@ -1365,7 +1366,7 @@ paths:
         '403': *id005
         '404': *id004
         '429': *id002
-  /api/social/terms/accept:
+  /social/terms/accept:
     post:
       tags:
       - Friends
@@ -1392,7 +1393,7 @@ paths:
         '403': *id005
         '404': *id004
         '429': *id002
-  /api/friends:
+  /friends:
     get:
       tags:
       - Friends
@@ -1415,7 +1416,7 @@ paths:
         '403': *id005
         '404': *id004
         '429': *id002
-  /api/friends/{userId}:
+  /friends/{userId}:
     delete:
       tags:
       - Friends
@@ -1436,7 +1437,7 @@ paths:
         '403': *id005
         '404': *id004
         '429': *id002
-  /api/friends/{userId}/head-to-head:
+  /friends/{userId}/head-to-head:
     get:
       tags:
       - Friends
@@ -1467,7 +1468,7 @@ paths:
         '403': *id005
         '404': *id004
         '429': *id002
-  /api/friend-requests:
+  /friend-requests:
     post:
       tags:
       - Friends
@@ -1476,7 +1477,7 @@ paths:
       x-requirements:
       - FR-034
       - FR-039
-      description: Trả cùng kết quả khi người nhận đã tắt nhận lời mời hoặc đã chặn, để không lộ cài đặt (ADR-017).
+      description: Trả cùng kết quả khi người nhận đã tắt nhận lời mời hoặc đã chặn, để không lộ cài đặt.
       requestBody:
         required: true
         content:
@@ -1525,7 +1526,7 @@ paths:
         '403': *id005
         '404': *id004
         '429': *id002
-  /api/friend-requests/{id}/accept:
+  /friend-requests/{id}/accept:
     post:
       tags:
       - Friends
@@ -1550,7 +1551,7 @@ paths:
         '403': *id005
         '404': *id004
         '429': *id002
-  /api/friend-requests/{id}/decline:
+  /friend-requests/{id}/decline:
     post:
       tags:
       - Friends
@@ -1571,7 +1572,7 @@ paths:
         '403': *id005
         '404': *id004
         '429': *id002
-  /api/friend-requests/{id}/cancel:
+  /friend-requests/{id}/cancel:
     post:
       tags:
       - Friends
@@ -1594,7 +1595,7 @@ paths:
         '429': *id002
 
 # Safety: chặn người dùng, báo cáo tin nhắn, người dùng hoặc trận
-  /api/blocks:
+  /blocks:
     get:
       tags:
       - Safety
@@ -1616,7 +1617,7 @@ paths:
         '403': *id005
         '404': *id004
         '429': *id002
-  /api/blocks/{userId}:
+  /blocks/{userId}:
     put:
       tags:
       - Safety
@@ -1657,7 +1658,7 @@ paths:
         '403': *id005
         '404': *id004
         '429': *id002
-  /api/reports:
+  /reports:
     post:
       tags:
       - Safety
@@ -1687,7 +1688,7 @@ paths:
         '429': *id002
 
 # Chats: danh sách hội thoại, lịch sử tin nhắn, gửi tin nhắn, đánh dấu đã đọc, xóa tin
-  /api/chats:
+  /chats:
     get:
       tags:
       - Chats
@@ -1710,7 +1711,7 @@ paths:
         '403': *id005
         '404': *id004
         '429': *id002
-  /api/chats/{friendUserId}/messages:
+  /chats/{friendUserId}/messages:
     get:
       tags:
       - Chats
@@ -1783,7 +1784,7 @@ paths:
         '404': *id004
         '409': *id012
         '429': *id002
-  /api/chats/{friendUserId}/read:
+  /chats/{friendUserId}/read:
     post:
       tags:
       - Chats
@@ -1810,7 +1811,7 @@ paths:
         '403': *id005
         '404': *id004
         '429': *id002
-  /api/messages/{messageId}:
+  /messages/{messageId}:
     delete:
       tags:
       - Chats
@@ -1835,7 +1836,7 @@ paths:
         '429': *id002
 
 # Invitations: mời thi đấu 1 vs 1, mời vào phòng, chấp nhận, từ chối, hủy lời mời
-  /api/game-invitations:
+  /game-invitations:
     post:
       tags:
       - Invitations
@@ -1897,7 +1898,7 @@ paths:
         '403': *id005
         '404': *id004
         '429': *id002
-  /api/game-invitations/{id}/accept:
+  /game-invitations/{id}/accept:
     post:
       tags:
       - Invitations
@@ -1923,7 +1924,7 @@ paths:
         '403': *id005
         '404': *id004
         '429': *id002
-  /api/game-invitations/{id}/decline:
+  /game-invitations/{id}/decline:
     post:
       tags:
       - Invitations
@@ -1945,7 +1946,7 @@ paths:
         '403': *id005
         '404': *id004
         '429': *id002
-  /api/game-invitations/{id}/cancel:
+  /game-invitations/{id}/cancel:
     post:
       tags:
       - Invitations
@@ -1967,7 +1968,7 @@ paths:
         '403': *id005
         '404': *id004
         '429': *id002
-  /api/matches/{matchId}/rematch:
+  /matches/{matchId}/rematch:
     post:
       tags:
       - Invitations
@@ -1994,7 +1995,7 @@ paths:
         '429': *id002
 
 # Rooms: tạo phòng, vào phòng, rời phòng, mời bạn, bắt đầu, tiến độ vụ án
-  /api/game-rooms:
+  /game-rooms:
     post:
       tags:
       - Rooms
@@ -2046,7 +2047,7 @@ paths:
         '403': *id005
         '404': *id004
         '429': *id002
-  /api/game-rooms/join:
+  /game-rooms/join:
     post:
       tags:
       - Rooms
@@ -2072,7 +2073,7 @@ paths:
         '403': *id005
         '404': *id004
         '429': *id002
-  /api/game-rooms/{roomId}:
+  /game-rooms/{roomId}:
     get:
       tags:
       - Rooms
@@ -2097,7 +2098,7 @@ paths:
         '403': *id005
         '404': *id004
         '429': *id002
-  /api/game-rooms/{roomId}/invite:
+  /game-rooms/{roomId}/invite:
     post:
       tags:
       - Rooms
@@ -2128,7 +2129,7 @@ paths:
         '403': *id005
         '404': *id004
         '429': *id002
-  /api/game-rooms/{roomId}/leave:
+  /game-rooms/{roomId}/leave:
     post:
       tags:
       - Rooms
@@ -2149,7 +2150,7 @@ paths:
         '403': *id005
         '404': *id004
         '429': *id002
-  /api/game-rooms/{roomId}/start:
+  /game-rooms/{roomId}/start:
     post:
       tags:
       - Rooms
@@ -2174,7 +2175,7 @@ paths:
         '403': *id005
         '404': *id004
         '429': *id002
-  /api/game-rooms/{roomId}/case:
+  /game-rooms/{roomId}/case:
     get:
       tags:
       - Rooms
@@ -2200,7 +2201,7 @@ paths:
         '403': *id005
         '404': *id004
         '429': *id002
-  /api/game-rooms/{roomId}/case/chapters/{chapterId}/answer:
+  /game-rooms/{roomId}/case/chapters/{chapterId}/answer:
     post:
       tags:
       - Rooms
@@ -2237,7 +2238,7 @@ paths:
         '404': *id004
         '409': *id012
         '429': *id002
-  /api/game-rooms/{roomId}/case/chapters/{chapterId}/hint:
+  /game-rooms/{roomId}/case/chapters/{chapterId}/hint:
     post:
       tags:
       - Rooms
@@ -2268,7 +2269,7 @@ paths:
         '404': *id004
         '409': *id012
         '429': *id002
-  /api/game-rooms/{roomId}/shadowing:
+  /game-rooms/{roomId}/shadowing:
     get:
       tags:
       - Rooms
@@ -2294,7 +2295,7 @@ paths:
         '403': *id005
         '404': *id004
         '429': *id002
-  /api/game-rooms/{roomId}/shadowing/submissions:
+  /game-rooms/{roomId}/shadowing/submissions:
     post:
       tags:
       - Rooms
@@ -2327,7 +2328,7 @@ paths:
         '403': *id005
         '404': *id004
         '429': *id002
-  /api/game-rooms/{roomId}/results:
+  /game-rooms/{roomId}/results:
     get:
       tags:
       - Rooms
@@ -2352,7 +2353,7 @@ paths:
         '403': *id005
         '404': *id004
         '429': *id002
-  /api/quick-messages:
+  /quick-messages:
     get:
       tags:
       - Rooms
@@ -2374,7 +2375,7 @@ paths:
         '403': *id005
         '404': *id004
         '429': *id002
-  /api/game-rooms/{roomId}/quick-messages:
+  /game-rooms/{roomId}/quick-messages:
     post:
       tags:
       - Rooms
@@ -2439,7 +2440,7 @@ paths:
         '429': *id002
 
 # Notifications: danh sách thông báo, số chưa đọc, đánh dấu đã đọc, cài đặt thông báo, đăng ký thiết bị
-  /api/notifications:
+  /notifications:
     get:
       tags:
       - Notifications
@@ -2467,7 +2468,7 @@ paths:
         '403': *id005
         '404': *id004
         '429': *id002
-  /api/notifications/unread-count:
+  /notifications/unread-count:
     get:
       tags:
       - Notifications
@@ -2488,7 +2489,7 @@ paths:
         '403': *id005
         '404': *id004
         '429': *id002
-  /api/notifications/{id}/read:
+  /notifications/{id}/read:
     post:
       tags:
       - Notifications
@@ -2509,7 +2510,7 @@ paths:
         '403': *id005
         '404': *id004
         '429': *id002
-  /api/notifications/read-all:
+  /notifications/read-all:
     post:
       tags:
       - Notifications
@@ -2525,7 +2526,7 @@ paths:
         '403': *id005
         '404': *id004
         '429': *id002
-  /api/notification-settings:
+  /notification-settings:
     get:
       tags:
       - Notifications
@@ -2570,7 +2571,7 @@ paths:
         '403': *id005
         '404': *id004
         '429': *id002
-  /api/devices:
+  /devices:
     post:
       tags:
       - Notifications
@@ -2596,7 +2597,7 @@ paths:
         '403': *id005
         '404': *id004
         '429': *id002
-  /api/devices/{id}:
+  /devices/{id}:
     delete:
       tags:
       - Notifications
@@ -2810,8 +2811,8 @@ components:
         character: *id008
         jlptLevel: *id006
         hanViet:
-          type: array
-          items: *id008
+type: string
+  example: "bách; bá"
     KanjiDetail:
       type: object
       properties:
@@ -2822,7 +2823,7 @@ components:
         radical: *id008
         mnemonicVi: *id008
         mnemonicImageUrl: *id008
-        strokeOrderGifUrl: *id008
+        strokeOrderAnimationUrl: *id008
         audioUrl: *id008
         readings:
           type: array

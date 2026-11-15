@@ -1,4 +1,4 @@
-# Danh sách Kanji JLPT tanos.co.uk
+# Danh sách cấp độ Kanji JLPT - tanos.co.uk
 
 - **Ngày kiểm tra:** 14-11-2026
 - **Người kiểm tra:** Nguyễn Tấn Mạnh

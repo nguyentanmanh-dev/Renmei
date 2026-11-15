@@ -8,11 +8,35 @@
     "usedBy": "Importer literal, ja_on, ja_kun, meanings_en, stroke_count, rad_value, grade, freq, vietnam"
   },
   {
-    "source": "JLPT_COMMUNITY_MAP",
+    "source": "TANOS_JLPT",
     "url": "chưa tìm ra",
     "downloadedAt": "14-11-2026",
     "fileVersion": "2010-legacy-map",
     "sha256": "<dán mã băm SHA-256 thực tế của tệp danh sách cấp độ>",
     "usedBy": "Importer gán cấp độ N5–N1 tham chiếu"
+  },
+  {
+    "source": "TATOEBA",
+    "url": "https://downloads.tatoeba.org/exports/sentences.tar.bz2",
+    "downloadedAt": "14-11-2026",
+    "fileVersion": "weekly-export-2026-11",
+    "sha256": "<dán mã băm SHA-256 của tệp câu ví dụ Tatoeba đã tải>",
+    "usedBy": "Importer trích xuất câu ví dụ song ngữ jpn-vie/jpn-eng kèm sentence_id, owner, license"
+  },
+  {
+    "source": "KANJI_ALIVE",
+    "url": "https://github.com/kanjialive/kanji-data-media",
+    "downloadedAt": "13-11-2026",
+    "fileVersion": "main-branch-2026-11-13",
+    "sha256": "<dán mã băm SHA-256 của gói/manifest media Kanji alive>",
+    "usedBy": "Media Pipeline hoạt ảnh nét viết MP4 và âm thanh phát âm từ ghép"
+  },
+  {
+    "source": "KANJIVG",
+    "url": "https://github.com/KanjiVG/kanjivg/releases",
+    "downloadedAt": "13-11-2026",
+    "fileVersion": "r20250816",
+    "sha256": "<dán mã băm SHA-256 của gói phát hành KanjiVG SVG>",
+    "usedBy": "Media Pipeline dữ liệu vector nét viết SVG dự phòng"
   }
 ]
