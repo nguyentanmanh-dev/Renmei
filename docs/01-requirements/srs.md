@@ -413,7 +413,7 @@
     - [x] **NFR-011.4:** Chính sách bảo mật được cập nhật nêu rõ dữ liệu tin nhắn, danh sách bạn và thông báo trước khi bật chức năng cho người dùng thật.
     - [x] **NFR-011.5:** Trước khi phát hành, đối chiếu yêu cầu hiện hành của nền tảng phân phối về nội dung do người dùng tạo ra và độ tuổi và ghi kết quả vào hồ sơ cổng phát hành.
 
-### NFR-012: Ghi công nguồn dữ liệu (Data Attribution)
+### NFR-012: Ghi công nguồn dữ liệu
 - **Mô tả:** Ứng dụng phải cung cấp màn hình **"Giới thiệu và ghi công"** truy cập trực tiếp từ menu chính, hiển thị đầy đủ nội dung ghi công từ tệp `data/ATTRIBUTION.md` bao gồm EDRDG/KANJIDIC2, Tatoeba, Kanji alive và các nguồn từ điển tham chiếu kèm liên kết tới văn bản giấy phép tương ứng.
 - **Tiêu chí nghiệm thu:** Người dùng mở được màn hình ghi công từ menu chính trong tối đa 2 thao tác chạm, nội dung khớp với `ATTRIBUTION.md`.
 
