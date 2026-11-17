@@ -1,6 +1,6 @@
 ﻿    # SDD: Software Design Document
 
-| Phiên bản : 1.0 | Ngày : 02-11-2026 | Trạng thái : Draft | Cổng : R1-G2 | Người duyệt : Nguyễn Tấn Mạnh |
+| Phiên bản : 1.0 | Ngày : 02-11-2026 | Trạng thái : Frozen | Cổng : R1-G2 | Người duyệt : Nguyễn Tấn Mạnh |
 
 ### ERD Diagram
 
