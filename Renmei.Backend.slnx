@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Renmei.Application/Renmei.Application.csproj" />
+    <Project Path="src/Renmei.Domain/Renmei.Domain.csproj" />
+    <Project Path="src/Renmei.Infrastructure/Renmei.Infrastructure.csproj" />
+    <Project Path="src/Renmei.WebApi/Renmei.WebApi.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Renmei.Application.Tests/Renmei.Application.Tests.csproj" />
+    <Project Path="tests/Renmei.Architecture.Tests/Renmei.Architecture.Tests.csproj" />
+    <Project Path="tests/Renmei.Domain.Tests/Renmei.Domain.Tests.csproj" />
+  </Folder>
+</Solution>

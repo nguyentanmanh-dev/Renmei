@@ -34,3 +34,33 @@ jobs:
 
       - name: 5. Run Unit Tests
         run: dotnet test --no-build -c Release --logger "trx;LogFileName=test-results.trx"
+
+
+
+name: Backend CI
+
+on:
+  push:
+    branches: [ develop, main ]
+  pull_request:
+    branches: [ develop, main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: Restore dependencies
+        run: dotnet restore Renmei.Backend.slnx
+
+      - name: Build (Release)
+        run: dotnet build Renmei.Backend.slnx -c Release --no-restore
+
+      - name: Run unit & architecture tests
+        run: dotnet test Renmei.Backend.slnx -c Release --no-build --verbosity normal
