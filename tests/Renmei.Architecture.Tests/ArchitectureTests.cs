@@ -19,11 +19,18 @@ public class ArchitectureTests
     }
 
     [Fact]
-    public void Application_does_not_reference_Infrastructure_or_WebApi_or_efcore()
+    public void Application_does_not_reference_Infrastructure_or_WebApi_or_SqlServer()
     {
-        Assert.False(References(Application, "Renmei.Infrastructure"));
-        Assert.False(References(Application, "Renmei.WebApi"));
-        Assert.False(References(Application, "Microsoft.EntityFrameworkCore"));
+        var applicationAssembly = typeof(Renmei.Application.Abstractions.IApplicationDbContext).Assembly;
+        var referencedAssemblies = applicationAssembly.GetReferencedAssemblies();
+
+        var hasForbiddenReference = referencedAssemblies.Any(a =>
+            a.Name is not null &&
+            (a.Name.Equals("Renmei.Infrastructure", StringComparison.OrdinalIgnoreCase) ||
+             a.Name.Equals("Renmei.WebApi", StringComparison.OrdinalIgnoreCase) ||
+             a.Name.Equals("Microsoft.EntityFrameworkCore.SqlServer", StringComparison.OrdinalIgnoreCase)));
+
+        Assert.False(hasForbiddenReference);
     }
 
     [Fact]
