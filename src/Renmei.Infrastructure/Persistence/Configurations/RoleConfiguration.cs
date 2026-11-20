@@ -13,5 +13,11 @@ public sealed class RoleConfiguration : IEntityTypeConfiguration<Role>
 
         b.Property(x => x.Name).HasMaxLength(30).IsRequired();
         b.HasIndex(x => x.Name).IsUnique();
+
+        b.HasData(
+        new { Id = RoleIds.User, Name = RoleNames.User },
+        new { Id = RoleIds.Editor, Name = RoleNames.Editor },
+        new { Id = RoleIds.Admin, Name = RoleNames.Admin }
+        );
     }
 }

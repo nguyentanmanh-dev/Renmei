@@ -9,5 +9,6 @@
     <Project Path="tests/Renmei.Application.Tests/Renmei.Application.Tests.csproj" />
     <Project Path="tests/Renmei.Architecture.Tests/Renmei.Architecture.Tests.csproj" />
     <Project Path="tests/Renmei.Domain.Tests/Renmei.Domain.Tests.csproj" />
+    <Project Path="tests/Renmei.Infrastructure.Tests/Renmei.Infrastructure.Tests.csproj" />
   </Folder>
 </Solution>
