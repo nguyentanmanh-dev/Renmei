@@ -45,4 +45,18 @@ public class User
     public DateTime? DeletedAt { get; private set; }
 
     public IReadOnlyCollection<UserRole> Roles => _roles;
+
+    public User(
+        string email,
+        string passwordHash,
+        string? displayName,
+        DateTime nowUtc,
+        bool emailConfirmed,
+        string timeZone = "UTC")
+        : this(email, passwordHash, displayName, timeZone, nowUtc)
+    {
+        EmailConfirmed = emailConfirmed;
+    }
+
+    public void AddRole(int roleId) => _roles.Add(new UserRole(Id, roleId));
 }
