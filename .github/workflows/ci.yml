@@ -24,7 +24,10 @@ jobs:
       - name: 2. Setup .NET 10 SDK
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '10.0.x'
+          global-json-file: global.json
+
+      - name: 2b. Verify .NET SDK & global.json
+        run: dotnet --info
 
       - name: 3. Restore dependencies
         run: dotnet restore Renmei.Backend.slnx
