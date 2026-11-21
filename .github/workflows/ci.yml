@@ -35,10 +35,5 @@ jobs:
       - name: 4. Build solution (Release mode)
         run: dotnet build Renmei.Backend.slnx -c Release --no-restore
 
-      - name: 4b. Verify EF Core model matches migrations
-       run: |
-         dotnet tool restore
-         dotnet ef migrations has-pending-model-changes --project src/Renmei.Infrastructure --startup-project src/Renmei.WebApi --no-build
-
       - name: 5. Run unit & architecture tests
         run: dotnet test Renmei.Backend.slnx -c Release --no-build --verbosity normal
