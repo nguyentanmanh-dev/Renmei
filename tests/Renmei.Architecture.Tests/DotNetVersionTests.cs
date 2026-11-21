@@ -25,10 +25,18 @@ public class DotNetVersionTests
         foreach (var p in new[] { "src", "tests" }.SelectMany(d =>
                      Directory.EnumerateFiles(Path.Combine(root, d), "*.csproj", SearchOption.AllDirectories)))
         {
-            var tfm = XDocument.Load(p).Descendants("TargetFramework").Select(e => e.Value.Trim()).FirstOrDefault();
-            if (tfm != "net10.0")
+            var relPath = Path.GetRelativePath(root, p);
+            try
             {
-                wrong.Add($"{Path.GetFileName(p)}: {tfm ?? "(không có)"}");
+                var tfm = XDocument.Load(p).Descendants("TargetFramework").Select(e => e.Value.Trim()).FirstOrDefault();
+                if (tfm != "net10.0")
+                {
+                    wrong.Add($"{relPath}: {tfm ?? "(không có)"}");
+                }
+            }
+            catch (Exception ex)
+            {
+                wrong.Add($"{relPath}: tệp XML rỗng hoặc không hợp lệ ({ex.Message})");
             }
         }
 
