@@ -1,39 +1,37 @@
-name: Backend CI
+name: CI
 
 on:
-  push:
-    branches: [ develop, main ]
   pull_request:
-    branches: [ develop, main ]
+    branches: [develop, main]
+  push:
+    branches: [develop, main]
 
 permissions:
   contents: read
 
 concurrency:
-  group: ci-${{ github.ref }}
-  cancel-in-progress: true
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
-  build-and-test:
+  build-test:
     runs-on: ubuntu-latest
-
+    timeout-minutes: 15
     steps:
-      - name: 1. Checkout source code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - name: 2. Setup .NET 10 SDK
-        uses: actions/setup-dotnet@v4
+      - uses: actions/setup-dotnet@v6
         with:
           global-json-file: global.json
 
-      - name: 2b. Verify .NET SDK & global.json
+      - name: SDK info
         run: dotnet --info
 
-      - name: 3. Restore dependencies
-        run: dotnet restore Renmei.Backend.slnx
+      - name: Restore
+        run: dotnet restore Renmei.slnx
 
-      - name: 4. Build solution (Release mode)
-        run: dotnet build Renmei.Backend.slnx -c Release --no-restore
+      - name: Build
+        run: dotnet build Renmei.slnx -c Release --no-restore
 
-      - name: 5. Run unit & architecture tests
-        run: dotnet test Renmei.Backend.slnx -c Release --no-build --verbosity normal
+      - name: Test
+        run: dotnet test Renmei.slnx -c Release --no-build --verbosity normal
