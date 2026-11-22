@@ -28,10 +28,10 @@ jobs:
         run: dotnet --info
 
       - name: Restore
-        run: dotnet restore Renmei.slnx
+        run: dotnet restore Renmei.Backend.slnx
 
       - name: Build
-        run: dotnet build Renmei.slnx -c Release --no-restore
+        run: dotnet build Renmei.Backend.slnx -c Release --no-restore
 
       - name: Test
-        run: dotnet test Renmei.slnx -c Release --no-build --verbosity normal
+        run: dotnet test Renmei.Backend.slnx -c Release --no-build --verbosity normal
