@@ -382,6 +382,114 @@ namespace Renmei.Infrastructure.Persistence.Migrations
                     b.ToTable("KanjiReadings", (string)null);
                 });
 
+            modelBuilder.Entity("Renmei.Domain.Learning.ReviewLog", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<Guid>("ClientEventId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("KanjiId")
+                        .HasColumnType("int");
+
+                    b.Property<double>("NewEase")
+                        .HasColumnType("float");
+
+                    b.Property<int>("NewInterval")
+                        .HasColumnType("int");
+
+                    b.Property<double>("PrevEase")
+                        .HasColumnType("float");
+
+                    b.Property<int>("PrevInterval")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Rating")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("ReviewedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("TimeTakenMs")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClientEventId")
+                        .IsUnique();
+
+                    b.HasIndex("KanjiId");
+
+                    b.HasIndex("UserId", "ReviewedAt");
+
+                    b.ToTable("ReviewLogs", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_ReviewLogs_Rating", "[Rating] BETWEEN 0 AND 5");
+
+                            t.HasCheckConstraint("CK_ReviewLogs_TimeTakenMs", "[TimeTakenMs] IS NULL OR [TimeTakenMs] >= 0");
+                        });
+                });
+
+            modelBuilder.Entity("Renmei.Domain.Learning.UserKanjiProgress", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("KanjiId")
+                        .HasColumnType("int");
+
+                    b.Property<DateOnly?>("DueDate")
+                        .HasColumnType("date");
+
+                    b.Property<double>("EaseFactor")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("float")
+                        .HasDefaultValue(2.5);
+
+                    b.Property<int>("IntervalDays")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsLeech")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("LapseCount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Repetitions")
+                        .HasColumnType("int");
+
+                    b.Property<string>("State")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)")
+                        .HasDefaultValue("New");
+
+                    b.HasKey("UserId", "KanjiId");
+
+                    b.HasIndex("KanjiId");
+
+                    b.HasIndex("UserId", "DueDate");
+
+                    b.ToTable("UserKanjiProgress", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_UserKanjiProgress_EaseFactor", "[EaseFactor] >= 1.3");
+
+                            t.HasCheckConstraint("CK_UserKanjiProgress_IntervalDays", "[IntervalDays] >= 0");
+
+                            t.HasCheckConstraint("CK_UserKanjiProgress_LapseCount", "[LapseCount] >= 0");
+
+                            t.HasCheckConstraint("CK_UserKanjiProgress_Repetitions", "[Repetitions] >= 0");
+                        });
+                });
+
             modelBuilder.Entity("Renmei.Domain.Users.RefreshToken", b =>
                 {
                     b.Property<Guid>("Id")
@@ -488,6 +596,11 @@ namespace Renmei.Infrastructure.Persistence.Migrations
                         .HasMaxLength(512)
                         .HasColumnType("nvarchar(512)");
 
+                    b.Property<string>("PreferredStudyTime")
+                        .HasMaxLength(5)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(5)");
+
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasMaxLength(20)
@@ -522,6 +635,38 @@ namespace Renmei.Infrastructure.Persistence.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("UserRoles", (string)null);
+                });
+
+            modelBuilder.Entity("Renmei.Domain.Users.UserStreak", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("CurrentStreak")
+                        .HasColumnType("int");
+
+                    b.Property<DateOnly?>("LastFreezeGrantMonth")
+                        .HasColumnType("date");
+
+                    b.Property<DateOnly?>("LastStudyDate")
+                        .HasColumnType("date");
+
+                    b.Property<int>("LongestStreak")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StreakFreezeCount")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserId");
+
+                    b.ToTable("UserStreaks", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_UserStreaks_Current", "[CurrentStreak] >= 0");
+
+                            t.HasCheckConstraint("CK_UserStreaks_Freeze", "[StreakFreezeCount] >= 0");
+
+                            t.HasCheckConstraint("CK_UserStreaks_Longest", "[LongestStreak] >= [CurrentStreak]");
+                        });
                 });
 
             modelBuilder.Entity("Renmei.Domain.Users.UserToken", b =>
@@ -643,6 +788,36 @@ namespace Renmei.Infrastructure.Persistence.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Renmei.Domain.Learning.ReviewLog", b =>
+                {
+                    b.HasOne("Renmei.Domain.Content.Kanji", null)
+                        .WithMany()
+                        .HasForeignKey("KanjiId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Renmei.Domain.Users.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Renmei.Domain.Learning.UserKanjiProgress", b =>
+                {
+                    b.HasOne("Renmei.Domain.Content.Kanji", null)
+                        .WithMany()
+                        .HasForeignKey("KanjiId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Renmei.Domain.Users.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Renmei.Domain.Users.RefreshToken", b =>
                 {
                     b.HasOne("Renmei.Domain.Users.User", null)
@@ -663,6 +838,15 @@ namespace Renmei.Infrastructure.Persistence.Migrations
                     b.HasOne("Renmei.Domain.Users.User", null)
                         .WithMany("Roles")
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Renmei.Domain.Users.UserStreak", b =>
+                {
+                    b.HasOne("Renmei.Domain.Users.User", null)
+                        .WithOne()
+                        .HasForeignKey("Renmei.Domain.Users.UserStreak", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

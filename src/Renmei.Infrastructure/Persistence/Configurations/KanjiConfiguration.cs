@@ -27,6 +27,10 @@ public sealed class KanjiConfiguration : IEntityTypeConfiguration<Kanji>
         b.Property(x => x.ReviewedAt).HasColumnType("datetime2");
         b.Property(x => x.PublishedAt).HasColumnType("datetime2");
 
+        b.Property(x => x.MnemonicImageUrl).HasMaxLength(500);
+        b.Property(x => x.StrokeOrderGifUrl).HasMaxLength(500);
+        b.Property(x => x.AudioUrl).HasMaxLength(500);
+
         b.HasIndex(x => new { x.JlptLevel, x.Status });
         b.Property(x => x.RowVersion).IsRowVersion();
 

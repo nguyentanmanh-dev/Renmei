@@ -3,6 +3,7 @@ using Renmei.Application.Abstractions;
 using Renmei.Domain.Auditing;
 using Renmei.Domain.Content;
 using Renmei.Domain.Users;
+using Renmei.Domain.Learning;
 
 namespace Renmei.Infrastructure.Persistence;
 
@@ -21,6 +22,10 @@ public sealed class ApplicationDbContext(DbContextOptions<ApplicationDbContext> 
     public DbSet<KanjiMeaning> KanjiMeanings => Set<KanjiMeaning>();
     public DbSet<ExampleWord> ExampleWords => Set<ExampleWord>();
     public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
+
+    public DbSet<UserKanjiProgress> UserKanjiProgress => Set<UserKanjiProgress>();
+    public DbSet<ReviewLog> ReviewLogs => Set<ReviewLog>();
+    public DbSet<UserStreak> UserStreaks => Set<UserStreak>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

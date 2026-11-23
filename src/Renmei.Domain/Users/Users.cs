@@ -59,4 +59,11 @@ public class User
     }
 
     public void AddRole(int roleId) => _roles.Add(new UserRole(Id, roleId));
+
+    public TimeOnly? PreferredStudyTime { get; private set; }
+
+    public void SetPreferredStudyTime(TimeOnly? value)
+    {
+        PreferredStudyTime = value;
+    }
 }

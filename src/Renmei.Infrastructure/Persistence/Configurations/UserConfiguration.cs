@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Renmei.Domain.Users;
+using System.Globalization;
 
 namespace Renmei.Infrastructure.Persistence.Configurations;
 
@@ -17,6 +18,15 @@ public sealed class UserConfiguration : IEntityTypeConfiguration<User>
         b.Property(x => x.PasswordHash).HasMaxLength(512).IsRequired();
         b.Property(x => x.DisplayName).HasMaxLength(100);
         b.Property(x => x.TimeZone).HasMaxLength(64).IsRequired();
+        b.Property(x => x.Status).HasConversion<string>().HasMaxLength(20).IsRequired();
+
+        b.Property(x => x.PreferredStudyTime)
+            .IsUnicode(false)
+            .HasMaxLength(5)
+            .HasConversion(
+                v => v.HasValue ? v.Value.ToString("HH:mm", CultureInfo.InvariantCulture) : null,
+                s => string.IsNullOrEmpty(s) ? null : TimeOnly.ParseExact(s, "HH:mm", CultureInfo.InvariantCulture));
+
         b.Property(x => x.Status).HasConversion<string>().HasMaxLength(20).IsRequired();
 
         b.Property(x => x.CreatedAt).HasColumnType("datetime2");
