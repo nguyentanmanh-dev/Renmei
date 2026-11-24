@@ -1,6 +1,21 @@
-@Renmei.WebApi_HostAddress = http://localhost:5048
+@host = https://localhost:5001
 
-GET {{Renmei.WebApi_HostAddress}}/weatherforecast/
-Accept: application/json
+GET {{host}}/api/kanji?level=5&page=1&pageSize=20
 
 ###
+GET {{host}}/api/kanji?q=日
+
+###
+GET {{host}}/api/kanji?q=nhật
+
+###
+GET {{host}}/api/kanji?page=0
+
+###
+GET {{host}}/api/kanji?pageSize=1000
+
+###
+GET {{host}}/api/kanji/1
+
+###
+GET {{host}}/api/kanji/999999
