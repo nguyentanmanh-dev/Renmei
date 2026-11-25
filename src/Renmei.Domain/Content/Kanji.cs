@@ -1,4 +1,5 @@
 using Renmei.Domain.Enums;
+using Renmei.Domain.Exceptions;
 
 namespace Renmei.Domain.Content;
 
@@ -46,4 +47,67 @@ public class Kanji
     public IReadOnlyCollection<KanjiReading> Readings => _readings;
     public IReadOnlyCollection<KanjiMeaning> Meanings => _meanings;
     public IReadOnlyCollection<ExampleWord> ExampleWords => _exampleWords;
+
+    public bool IsEditable => Status is KanjiStatus.Draft or KanjiStatus.InReview;
+
+    public void UpdateContent(
+        int jlptLevel,
+        int? strokeCount,
+        string? radical,
+        string? mnemonicVi,
+        string? imageUrl,
+        string? gifUrl,
+        string? audioUrl,
+        int sourceId,
+        Guid? by)
+    {
+        if (!IsEditable)
+        {
+            throw new DomainException("kanji-not-editable", $"Kanji in status {Status} cannot be edited.");
+        }
+
+        if (jlptLevel is < 1 or > 5)
+        {
+            throw new ArgumentOutOfRangeException(nameof(jlptLevel));
+        }
+
+        JlptLevel = jlptLevel;
+        StrokeCount = strokeCount;
+        Radical = radical;
+        MnemonicVi = mnemonicVi;
+        MnemonicImageUrl = imageUrl;
+        StrokeOrderGifUrl = gifUrl;
+        AudioUrl = audioUrl;
+        SourceId = sourceId;
+        UpdatedBy = by;
+    }
+
+    public void ReplaceReadings(IEnumerable<KanjiReading> items)
+    {
+        _readings.Clear();
+        _readings.AddRange(items);
+    }
+
+    public void ReplaceMeanings(IEnumerable<KanjiMeaning> items)
+    {
+        _meanings.Clear();
+        _meanings.AddRange(items);
+    }
+
+    public void ReplaceExampleWords(IEnumerable<ExampleWord> items)
+    {
+        _exampleWords.Clear();
+        _exampleWords.AddRange(items);
+    }
+
+    public void Archive(Guid? by)
+    {
+        if (Status == KanjiStatus.Archived)
+        {
+            return;
+        }
+
+        Status = KanjiStatus.Archived;
+        UpdatedBy = by;
+    }
 }

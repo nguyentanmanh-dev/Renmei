@@ -26,4 +26,7 @@ public interface IApplicationDbContext
     DbSet<UserStreak> UserStreaks { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
+
+    void SetOriginalRowVersion<TEntity>(TEntity entity, byte[] rowVersion) where TEntity : class;
+    void MarkAsModified<TEntity>(TEntity entity) where TEntity : class;
 }

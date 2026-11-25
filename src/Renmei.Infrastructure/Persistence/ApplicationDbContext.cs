@@ -32,4 +32,10 @@ public sealed class ApplicationDbContext(DbContextOptions<ApplicationDbContext> 
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
         base.OnModelCreating(modelBuilder);
     }
+
+    public void SetOriginalRowVersion<TEntity>(TEntity entity, byte[] rowVersion) where TEntity : class
+    => Entry(entity).Property("RowVersion").OriginalValue = rowVersion;
+
+    public void MarkAsModified<TEntity>(TEntity entity) where TEntity : class
+        => Entry(entity).State = EntityState.Modified;
 }
