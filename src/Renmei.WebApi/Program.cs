@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 using Renmei.Application.Abstractions;
 using Renmei.WebApi.Services;
+using Renmei.Application.Features.Auth;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +19,8 @@ builder.Services.AddControllers()
     .AddJsonOptions(o => o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ICurrentUser, CurrentUser>();
+builder.Services.AddSingleton(TimeProvider.System);
+builder.Services.AddScoped<ITokenService, PlaceholderTokenService>();
 
 var app = builder.Build();
 

@@ -48,4 +48,10 @@ public sealed class EndpointSecurityTests
         var values = new StringValues(["\"AQIDBAUGBwg=\"", "\"CAcGBQQDAgE=\""]);
         Assert.False(ETagHelper.TryParseIfMatch(values, out _));
     }
+
+    [Fact(Skip = "Bật khi làm JWT")]
+    public void Login_returns_valid_accessToken_and_refreshToken()
+    {
+        Assert.Fail("Thay PlaceholderTokenService bằng JwtTokenService và bật kiểm thử token ở việc kế tiếp.");
+    }
 }
