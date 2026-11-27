@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,13 +14,19 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        var connectionString = configuration.GetConnectionString("Default") ?? throw new InvalidOperationException("Connection string 'Default' is not configured.");
+        var connectionString = configuration.GetConnectionString("Default")
+            ?? throw new InvalidOperationException("Connection string 'Default' is not configured.");
 
-        services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("Default")));
+        services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
 
         services.AddScoped<IApplicationDbContext>(sp => sp.GetRequiredService<ApplicationDbContext>());
 
         services.AddOptions<AdminSeedOptions>().Bind(configuration.GetSection(AdminSeedOptions.Section));
+        services.Configure<PasswordHasherOptions>(options =>
+        {
+            options.IterationCount = configuration.GetValue<int?>("Security:PasswordHashing:IterationCount") ?? 210_000;
+        });
+
         services.AddSingleton<Application.Abstractions.IPasswordHasher, IdentityPasswordHasher>();
         services.AddScoped<IDataSeeder, AdminSeeder>();
         services.AddSingleton<IClock, SystemClock>();

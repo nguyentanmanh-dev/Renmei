@@ -135,8 +135,8 @@ public sealed class AdminSeederTests
         var hash = hasher.Hash(raw);
 
         Assert.NotEqual(raw, hash);
-        Assert.True(hasher.Verify(hash, raw));
-        Assert.False(hasher.Verify(hash, "WrongPassword#2026"));
+        Assert.Equal(PasswordCheck.Success, hasher.Verify(hash, raw));
+        Assert.Equal(PasswordCheck.Failed, hasher.Verify(hash, "WrongPassword#2026"));
     }
 
     [Fact]

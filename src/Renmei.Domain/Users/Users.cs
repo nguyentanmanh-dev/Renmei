@@ -1,4 +1,5 @@
 using Renmei.Domain.Enums;
+using Renmei.Domain.Exceptions;
 
 namespace Renmei.Domain.Users;
 
@@ -65,5 +66,22 @@ public class User
     public void SetPreferredStudyTime(TimeOnly? value)
     {
         PreferredStudyTime = value;
+    }
+
+    public bool CanSignIn => Status == UserStatus.Active;
+
+    public void RecordLogin(DateTime nowUtc)
+    {
+        LastLoginAt = nowUtc;
+    }
+
+    public void ChangePasswordHash(string newHash)
+    {
+        if (string.IsNullOrWhiteSpace(newHash))
+        {
+            throw new DomainException("auth-invalid-password-hash", "Password hash cannot be empty.");
+        }
+
+        PasswordHash = newHash;
     }
 }
