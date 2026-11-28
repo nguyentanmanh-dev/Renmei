@@ -7,7 +7,8 @@ public enum AuthError
     InvalidInput,
     EmailTaken,
     InvalidCredentials,
-    AccountLocked
+    AccountLocked,
+    InvalidRefreshToken
 }
 
 public sealed record AuthResult<T>(T? Value, AuthError? Error = null, string? Detail = null)
@@ -26,7 +27,17 @@ public sealed record LoginRequest(
     [Required, StringLength(256)] string Email,
     [Required, StringLength(128)] string Password);
 
-public sealed record TokenPairDto(
+public sealed record RefreshRequest(
+    [Required, StringLength(256)] string RefreshToken);
+
+public sealed record UserProfileDto(
+    Guid Id,
+    string Email,
+    string? DisplayName,
+    IReadOnlyList<string> Roles);
+
+public sealed record AuthResponseDto(
     string AccessToken,
     string RefreshToken,
-    int ExpiresIn);
+    int ExpiresInSeconds,
+    UserProfileDto User);

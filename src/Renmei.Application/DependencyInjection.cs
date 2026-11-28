@@ -12,6 +12,7 @@ public static class DependencyInjection
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IKanjiQueryService, KanjiQueryService>();
         services.AddScoped<IAdminKanjiService, AdminKanjiService>();
+        services.AddScoped<ITokenService, TokenService>();
         return services;
     }
 }

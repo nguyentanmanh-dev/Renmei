@@ -31,6 +31,14 @@ Sử dụng `PasswordHasher<object>` của `Microsoft.AspNetCore.Identity` PBKDF
 - Số vòng lặp đọc từ cấu hình `Security:PasswordHashing:IterationCount`, tốc độ trung bình `<điền ms đã đo>` ms/lần trên môi trường phát triển.
 - Khi `Verify` trả về `PasswordCheck.SuccessRehashNeeded`, `AuthService.AuthenticateAsync` tự động băm lại mật khẩu với `IterationCount` mới ngay tại lần đăng nhập thành công.
 
+Quyết định về Access Token JWT và Refresh Token
+- **Thuật toán ký JWT:** `HS256` khóa đối xứng tối thiểu 32 byte đọc từ User Secrets / biến môi trường `Jwt__SigningKey`, kiểm tra fail-fast qua `.ValidateOnStart()`.
+- **Thời hạn và Claims:** Access token sống **15 phút** `ClockSkew = 30s`, chỉ chứa `sub`, `jti`, `iat`, `nbf`, `exp`, `iss`, `aud`, `role` — tuyệt đối không chứa email, tên hiển thị hay mật khẩu băm.
+- **Refresh token & Lưu trữ:** Chuỗi ngẫu nhiên 32 byte mã hóa Base64Url 43 ký tự, chỉ lưu bản băm **SHA-256** 64 ký tự hex vào cột `TokenHash`.
+- **Xoay vòng và Phát hiện dùng lại:**
+  - Mỗi lần làm mới sẽ thu hồi nguyên tử token cũ `UPDATE ... WHERE Id = @id AND RevokedAt IS NULL` và phát hành cặp token mới.
+  - Cột `RevokedAt` vừa đóng vai trò cờ thu hồi vừa là mốc tính **thời gian ân hạn 10 giây** `ReuseGraceSeconds`. Dùng lại token đã thu hồi trong 10 giây đầu chỉ trả `401` xử lý request song song do mạng, dùng lại sau 10 giây bị coi là đánh cắp và thu hồi toàn bộ refresh token đang hoạt động của người dùng đó chấp nhận đăng xuất mọi thiết bị do ERD đóng băng chưa có `FamilyId`.
+
 ## Hệ quả
 - **Lợi ích:** Đảm bảo hiệu năng API cao, API không cần soi CSDL kiểm tra token trong 15 phút sống của Access Token, hỗ trợ trải nghiệm đăng nhập vô tận mượt mà cho ứng dụng di động.
 - **Đánh đổi và rủi ro:** Access Token không thể thu hồi ngay lập tức trong vòng 15 phút hiệu lực ngoại trừ việc duy trì một danh sách đen tạm thời.
