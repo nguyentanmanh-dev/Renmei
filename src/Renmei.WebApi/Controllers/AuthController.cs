@@ -6,10 +6,10 @@ namespace Renmei.WebApi.Controllers;
 
 [ApiController]
 [Route("api/auth")]
-[AllowAnonymous]
 public sealed class AuthController(IAuthService auth, ITokenService tokens) : ControllerBase
 {
     [HttpPost("register", Name = "register")]
+    [AllowAnonymous]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
@@ -25,10 +25,10 @@ public sealed class AuthController(IAuthService auth, ITokenService tokens) : Co
     }
 
     [HttpPost("login", Name = "login")]
-    [ProducesResponseType<TokenPairDto>(StatusCodes.Status200OK)]
+    [AllowAnonymous]
+    [ProducesResponseType<AuthResponseDto>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    [ProducesResponseType(StatusCodes.Status501NotImplemented)]
     public async Task<IActionResult> Login(LoginRequest r, CancellationToken ct)
     {
         var res = await auth.AuthenticateAsync(r.Email, r.Password, ct);
@@ -41,17 +41,28 @@ public sealed class AuthController(IAuthService auth, ITokenService tokens) : Co
             };
         }
 
-        try
-        {
-            var pair = await tokens.IssueAsync(res.Value!, ct);
-            return Ok(pair);
-        }
-        catch (NotImplementedException)
-        {
-            return Problem(
-                statusCode: StatusCodes.Status501NotImplemented,
-                title: "JWT token issuance is not implemented yet.",
-                type: "not-implemented");
-        }
+        return Ok(await tokens.IssueAsync(res.Value!, ct));
+    }
+
+    [HttpPost("refresh", Name = "refreshToken")]
+    [AllowAnonymous]
+    [ProducesResponseType<AuthResponseDto>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> Refresh(RefreshRequest r, CancellationToken ct)
+    {
+        var res = await tokens.RefreshAsync(r.RefreshToken, ct);
+        return res.IsSuccess
+            ? Ok(res.Value)
+            : Problem(statusCode: 401, title: "Invalid refresh token.", type: "auth-invalid-refresh");
+    }
+
+    [HttpPost("logout", Name = "logout")]
+    [Authorize]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> Logout(RefreshRequest r, CancellationToken ct)
+    {
+        await tokens.RevokeAsync(r.RefreshToken, ct);
+        return NoContent();
     }
 }
